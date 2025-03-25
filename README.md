@@ -1,51 +1,40 @@
-# surfer
+# Frontend: web application server
 
-The simple **WIP Blog** built on *pure Rust stack*, with upcoming upgrades.
+The **frontend** for https://kids.kousun.com, a **Web Application Server built on Rust Web Stacks**: tide, async-std, fluent, graphql_client, surf, rhai, handlebars, lettre ...
 
-Backend for graphql services using tide, async-graphql, jsonwebtoken, mongodb and so on. 
+## Build & run
 
-There are two options for web frontend:
-- Frontend-yew for web application using yew, graphql_client, cookie and so on.
-- Frontend-handlebars for web application using tide, yew, rhai, surf, graphql_client, handlebars-rust, cookie and so on.
+``` Bash
+git clone https://github.com/rusthub-org/kids.kousun.com
+cd ./frontend
+```
 
-See also: 
-- https://github.com/zzy/tide-async-graphql-mongodb - Clean boilerplate for graphql services, wasm/yew & handlebars frontend. 
-- https://github.com/piexue/piexue.com - Multi-language CMS based on the Rust web stacks.
+Rename file `.env.example` to `.env`, or put the environment variables into a `.env` file:
 
-## Features
+```
+DOMAIN=kids.kousun.com
+ADDR=127.0.0.1
+PORT=7402
+LOG_LEVEL=Debug
 
-Demo site:
-- [niqin.com - NiQin Books Platform | 泥芹书馆](https://niqin.com)
-- [piexue.com - Project Matchmaking | 项目对接](https://piexue.com)
+GQL_PROT=http
+GQL_ADDR=127.0.0.1
+GQL_PORT=8402
+GQL_URI=gql
+GQL_VER=v1
+GIQL_VER=v1i
 
-## MongoDB data
+EMAIL_SMTP=<smtp.server>
+EMAIL_FROM=<email_account>
+EMAIL_USERNAME=<username>
+EMAIL_PASSWORD=<password>
+```
 
-MongoDB data(include structure & documents) file is `/data/surfer-dev.sql`.
+Then, build & run:
 
-If you need mongodb cloud count, please send email to me.
+``` Bash
+cargo build
+cargo run # or cargo watch -x run
+```
 
-## Stacks
-
-- [Rust](https://github.com/rust-lang/rust) - [Rust By Example](https://rust-by-example.niqin.com) and [Cargo Book](https://cargo.niqin.com)
-- [Tide](https://crates.io/crates/tide) - [Tide Book](https://tide-book.niqin.com)
-- [rhai](https://crates.io/crates/rhai) - [Embedded Scripting for Rust](https://rhai-script.niqin.com)
-- [async-graphql](https://crates.io/crates/async-graphql) - [async-graphql docs](https://async-graphql.niqin.com)
-- [mongodb & mongo-rust-driver](https://crates.io/crates/mongodb)
-- [Surf](https://crates.io/crates/surf)
-- [graphql_client](https://crates.io/crates/graphql_client)
-- [yew](https://yew.niqin.com)
-- [handlebars-rust](https://crates.io/crates/handlebars)
-- [jsonwebtoken](https://crates.io/crates/jsonwebtoken)
-- [cookie-rs](https://crates.io/crates/cookie)
-
-## How to Build & Run?
-
-Please read:
-
-- [**Backend: graphql servies server**](./backend/README.md)
-- [**Frontend-yew: web application server**](./frontend-yew/README.md)
-- [**Frontend-handlebars: web application server**](./frontend-handlebars/README.md)
-
-## Contributing
-
-You are welcome in contributing to the surfer project. 
+WebUI: connect to http://127.0.0.1:7402 with browser.
