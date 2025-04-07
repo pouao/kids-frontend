@@ -8,7 +8,7 @@ use serde_json::{json, Value};
 
 use crate::State;
 use crate::util::{
-    constant::CFG,
+    constant::{HtmlResult, CFG},
     common::gql_uri,
     email::send_email,
     tpl::{Hbs, insert_wish_random},
@@ -24,7 +24,7 @@ use crate::models::{
     },
 };
 
-pub async fn init(req: Request<State>) -> tide::Result {
+pub async fn init(req: Request<State>) -> HtmlResult<T> {
     let accept_language = req.header("accept-language");
     let language =
         String::from(if let Some(client_language) = accept_language {

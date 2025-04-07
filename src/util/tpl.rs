@@ -1,10 +1,11 @@
 use std::collections::BTreeMap;
-use tide::{Response, StatusCode, Body, http::mime::HTML};
+use axum::{response::Html, Router, routing::{get, post}};
 use handlebars::{Handlebars, Context, Helper, Output, RenderContext, RenderError};
 use graphql_client::{GraphQLQuery, Response as GqlResponse};
 use serde::Serialize;
 use serde_json::json;
 
+use super::constant::HtmlResult;
 use super::common::{gql_uri, scripts_dir, tpls_dir, get_lang_msg};
 
 use crate::models::{
@@ -33,7 +34,7 @@ impl<'hbs> Hbs<'hbs> {
         Hbs { name: tpl_name, reg: hbs_reg }
     }
 
-    pub async fn render<T>(&self, data: &T) -> tide::Result
+    pub async fn render<T>(&self, data: &T) -> HtmlResult<T>
     where
         T: Serialize,
     {
@@ -240,12 +241,12 @@ pub async fn insert_wish_random(data: &mut BTreeMap<&str, serde_json::Value>) {
         WishRandomData::build_query(wish_random_data::Variables {
             username: "-".to_string(),
         });
-    let wish_random_query = json!(wish_random_build_query);
+    // let wish_random_query = json!(wish_random_build_query);
 
     let wish_random_resp_body: GqlResponse<serde_json::Value> =
-        surf::post(&gql_uri().await)
-            .body(wish_random_query)
-            .recv_json()
+        reqwest::Client::new().post(&gql_uri().await)
+            .json(wish_random_build_query)
+            .send()
             .await
             .unwrap();
     let wish_random_resp_data = wish_random_resp_body.data.expect("无响应数据");

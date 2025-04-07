@@ -1,5 +1,3 @@
-use tide::{self, Server};
-
 pub mod home;
 pub mod users;
 pub mod projects;
@@ -7,11 +5,11 @@ pub mod categories;
 pub mod topics;
 pub mod admin;
 
-use crate::State;
+use axum::Router;
 use crate::util::common::tpls_dir;
 
-pub async fn push_res(app: &mut Server<State>) {
-    app.at("/").get(super::routes::home::init);
+pub async fn push_res() {
+    let app_router = Router::new().route("/",get(super::routes::home::init));
 
     app.at("/static/*").serve_dir("../assets/static/").unwrap();
     app.at("/files/*").serve_dir("../files/").unwrap();

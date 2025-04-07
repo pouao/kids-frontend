@@ -1,6 +1,9 @@
-use dotenv::dotenv;
 use lazy_static::lazy_static;
 use std::collections::HashMap;
+
+// axum result type
+pub type HtmlResult<T> = Result<axum::response::Html<T>, axum::http::StatusCode>;
+pub type JsonResult<T> = Result<axum::Json<T>, axum::http::StatusCode>;
 
 lazy_static! {
     // CFG variables defined in .env file
@@ -21,10 +24,6 @@ lazy_static! {
             "PORT",
             dotenv::var("PORT").expect("Expected PORT to be set in env!"),
         );
-        map.insert(
-            "LOG_LEVEL",
-            dotenv::var("LOG_LEVEL").expect("Expected LOG_LEVEL to be set in env!"),
-        );
 
         map.insert(
             "GQL_PROT",
@@ -41,14 +40,6 @@ lazy_static! {
         map.insert(
             "GQL_URI",
             dotenv::var("GQL_URI").expect("Expected GQL_URI to be set in env!"),
-        );
-        map.insert(
-            "GQL_VER",
-            dotenv::var("GQL_VER").expect("Expected GQL_VER to be set in env!"),
-        );
-        map.insert(
-            "GIQL_VER",
-            dotenv::var("GIQL_VER").expect("Expected GIQL_VER to be set in env!"),
         );
 
         map.insert(

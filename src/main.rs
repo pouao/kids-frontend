@@ -1,30 +1,28 @@
-mod util;
-mod routes;
-mod models;
 
-use crate::util::constant::CFG;
 
-#[async_std::main]
-async fn main() -> Result<(), std::io::Error> {
-    let app_state = State {};
-    let mut app = tide::with_state(app_state);
-    // app = push_res(app).await;
-    routes::push_res(&mut app).await;
 
-    let log_level = CFG.get("LOG_LEVEL").unwrap();
-    use std::str::FromStr;
-    femme::with_level(femme::LevelFilter::from_str(log_level).unwrap());
-    app.with(tide::log::LogMiddleware::new());
+use kids_frontend::util::constant::CFG;
+use kids_frontend::routers::push_router;
 
-    app.listen(format!(
+#[tokio::main]
+async fn main() {
+    tracing_subscriber::fmt::init();
+
+    
+    let app_router = push_router().await;
+
+    let listener = tokio::net::TcpListener::bind(format!(
         "{}:{}",
-        CFG.get("ADDR").unwrap(),
+        CFG.get("HOST").unwrap(),
         CFG.get("PORT").unwrap()
     ))
-    .await?;
-
-    Ok(())
+    .await
+    .unwrap();
+    tracing::info!(
+        "odds web-server: http://{}",
+        listener.local_addr().unwrap(),
+    );
+    axum::serve(listener, app_router).await.unwrap()
 }
 
-#[derive(Clone, Debug)]
-pub struct State {}
+
