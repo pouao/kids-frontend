@@ -13,9 +13,9 @@ use crate::util::{
 use crate::models::{
     Page,
     users::{
-        UsersData, users_data, UserByIdData, user_by_id_data,
-        UserByUsernameDetailData, user_by_username_detail_data,
-        UserUpdateOneFieldByIdData, user_update_one_field_by_id_data,
+        UsersData, users_data, UserByIdData, user_by_id_data, UserByUsernameDetailData,
+        user_by_username_detail_data, UserUpdateOneFieldByIdData,
+        user_update_one_field_by_id_data,
     },
 };
 
@@ -42,7 +42,7 @@ pub async fn users_index(req: Request<State>) -> tide::Result {
         .reg_script_lang()
         .await;
 
-    let mut data: BTreeMap<&str, serde_json::Value> = BTreeMap::new();
+    let mut data: BTreeMap<&str, Value> = BTreeMap::new();
     data.insert("language", json!(language));
     data.insert("nav-users-selected", json!("is-selected"));
     data.insert("users-all-selected", json!("is-selected"));
@@ -62,7 +62,7 @@ pub async fn users_index(req: Request<State>) -> tide::Result {
     });
     let users_query = json!(users_build_query);
 
-    let users_resp_body: GqlResponse<serde_json::Value> =
+    let users_resp_body: GqlResponse<Value> =
         surf::post(&gql_uri().await).body(users_query).recv_json().await?;
     let users_resp_data = users_resp_body.data.expect("无响应数据");
 
@@ -95,7 +95,7 @@ pub async fn users_index(req: Request<State>) -> tide::Result {
 //         .reg_script_lang()
 //         .await;
 
-//     let mut data: BTreeMap<&str, serde_json::Value> = BTreeMap::new();
+//     let mut data: BTreeMap<&str, Value> = BTreeMap::new();
 //     data.insert("language", json!(language));
 //     data.insert("nav-users-selected", json!("is-selected"));
 //     insert_wish_random(&mut data).await;
@@ -141,7 +141,7 @@ pub async fn users_index(req: Request<State>) -> tide::Result {
 //         });
 //     let users_by_quality_query = json!(users_by_quality_build_query);
 
-//     let users_by_quality_resp_body: GqlResponse<serde_json::Value> =
+//     let users_by_quality_resp_body: GqlResponse<Value> =
 //         surf::post(&gql_uri().await)
 //             .body(users_by_quality_query)
 //             .recv_json()
@@ -177,7 +177,7 @@ pub async fn user_index(req: Request<State>) -> tide::Result {
         .reg_script_lang()
         .await;
 
-    let mut data: BTreeMap<&str, serde_json::Value> = BTreeMap::new();
+    let mut data: BTreeMap<&str, Value> = BTreeMap::new();
     data.insert("language", json!(language));
     data.insert("nav-users-selected", json!("is-selected"));
     insert_wish_random(&mut data).await;
@@ -190,15 +190,12 @@ pub async fn user_index(req: Request<State>) -> tide::Result {
 
     let author_username = req.param("author_username")?;
     let author_by_username_detail_build_query =
-        UserByUsernameDetailData::build_query(
-            user_by_username_detail_data::Variables {
-                username: String::from(author_username),
-            },
-        );
-    let author_by_username_detail_query =
-        json!(author_by_username_detail_build_query);
+        UserByUsernameDetailData::build_query(user_by_username_detail_data::Variables {
+            username: String::from(author_username),
+        });
+    let author_by_username_detail_query = json!(author_by_username_detail_build_query);
 
-    let author_by_username_detail_resp_body: GqlResponse<serde_json::Value> =
+    let author_by_username_detail_resp_body: GqlResponse<Value> =
         surf::post(&gql_uri().await)
             .body(author_by_username_detail_query)
             .recv_json()
@@ -217,8 +214,7 @@ pub async fn user_index(req: Request<State>) -> tide::Result {
 pub async fn user_activate(req: Request<State>) -> tide::Result {
     let language = String::from(req.param("language")?);
 
-    let mut user_activate_tpl: Hbs =
-        Hbs::new("users/users-user-activate").await;
+    let mut user_activate_tpl: Hbs = Hbs::new("users/users-user-activate").await;
     user_activate_tpl
         .reg_head()
         .await
@@ -230,7 +226,7 @@ pub async fn user_activate(req: Request<State>) -> tide::Result {
         .await;
     user_activate_tpl.reg_script_values().await.reg_script_lang().await;
 
-    let mut data: BTreeMap<&str, serde_json::Value> = BTreeMap::new();
+    let mut data: BTreeMap<&str, Value> = BTreeMap::new();
     data.insert("language", json!(language));
     data.insert("nav-users-selected", json!("is-selected"));
     insert_wish_random(&mut data).await;
@@ -244,13 +240,9 @@ pub async fn user_activate(req: Request<State>) -> tide::Result {
                 });
             let user_resend_query = json!(user_resend_build_query);
 
-            let user_resend_resp_body: GqlResponse<serde_json::Value> =
-                surf::post(&gql_uri().await)
-                    .body(user_resend_query)
-                    .recv_json()
-                    .await?;
-            let user_resend_resp_data =
-                user_resend_resp_body.data.expect("无响应数据");
+            let user_resend_resp_body: GqlResponse<Value> =
+                surf::post(&gql_uri().await).body(user_resend_query).recv_json().await?;
+            let user_resend_resp_data = user_resend_resp_body.data.expect("无响应数据");
 
             let user_resend = user_resend_resp_data["userById"].clone();
 
@@ -266,17 +258,16 @@ pub async fn user_activate(req: Request<State>) -> tide::Result {
             data.insert("user_resend", user_resend);
         }
         _ => {
-            let user_activate_build_query =
-                UserUpdateOneFieldByIdData::build_query(
-                    user_update_one_field_by_id_data::Variables {
-                        user_id: user_id.to_string(),
-                        field_name: String::from("status"),
-                        field_val: String::from("1"),
-                    },
-                );
+            let user_activate_build_query = UserUpdateOneFieldByIdData::build_query(
+                user_update_one_field_by_id_data::Variables {
+                    user_id: user_id.to_string(),
+                    field_name: String::from("status"),
+                    field_val: String::from("1"),
+                },
+            );
             let user_activate_query = json!(user_activate_build_query);
 
-            let user_activate_resp_body: GqlResponse<serde_json::Value> =
+            let user_activate_resp_body: GqlResponse<Value> =
                 surf::post(&gql_uri().await)
                     .body(user_activate_query)
                     .recv_json()
@@ -284,8 +275,7 @@ pub async fn user_activate(req: Request<State>) -> tide::Result {
             let user_activate_resp_data =
                 user_activate_resp_body.data.expect("无响应数据");
 
-            let user_activate =
-                user_activate_resp_data["userUpdateOneFieldById"].clone();
+            let user_activate = user_activate_resp_data["userUpdateOneFieldById"].clone();
 
             data.insert("user_activate", user_activate);
         }

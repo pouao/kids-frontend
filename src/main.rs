@@ -1,6 +1,3 @@
-
-
-
 use kids_frontend::util::constant::CFG;
 use kids_frontend::routers::push_router;
 
@@ -8,7 +5,6 @@ use kids_frontend::routers::push_router;
 async fn main() {
     tracing_subscriber::fmt::init();
 
-    
     let app_router = push_router().await;
 
     let listener = tokio::net::TcpListener::bind(format!(
@@ -24,5 +20,3 @@ async fn main() {
     );
     axum::serve(listener, app_router).await.unwrap()
 }
-
-

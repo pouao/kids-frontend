@@ -26,70 +26,70 @@ type ObjectId = String;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectsData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectsByUserData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectsByCategoryData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectsByTopicData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectNewData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectUpdateOneFieldByIdData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectRandomData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct FileNewData;
 
 #[derive(GraphQLQuery)]
 #[graphql(
-    schema_path = "../assets/graphql/schema.graphql",
-    query_path = "../assets/graphql/projects.graphql"
+    schema_path = "./assets/graphql/schema.graphql",
+    query_path = "./assets/graphql/projects.graphql"
 )]
 pub struct ProjectFileNewData;

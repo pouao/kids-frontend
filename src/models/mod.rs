@@ -16,6 +16,10 @@ pub struct Page {
 
 impl Default for Page {
     fn default() -> Self {
-        Self { from: 1, first: String::from("-"), last: String::from("-") }
+        Self {
+            from: 1,
+            first: String::from("-"),
+            last: String::from("-"),
+        }
     }
 }
