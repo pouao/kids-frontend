@@ -130,8 +130,15 @@ pub async fn sign_status(cookie_jar: CookieJar) -> SignStatus {
         String::from("-")
     };
 
-    let sign_in =
-        if let "" | "-" = username.trim() { false } else { true };
+    let sign_in = if let "" | "-" = username.trim() {
+        false
+    } else {
+        true
+    };
 
-    SignStatus { sign_in, username, token }
+    SignStatus {
+        sign_in,
+        username,
+        token,
+    }
 }

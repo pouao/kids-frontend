@@ -55,7 +55,12 @@ async fn init_index<'ii>(
     language: String,
 ) -> (Hbs<'ii>, BTreeMap<&'ii str, Value>) {
     let mut tpl: Hbs = Hbs::new("index").await;
-    tpl.reg_head().await.reg_container().await.reg_footer().await;
+    tpl.reg_head()
+        .await
+        .reg_container()
+        .await
+        .reg_footer()
+        .await;
     tpl.reg_script_values().await.reg_script_lang().await;
 
     let mut data: BTreeMap<&str, Value> = BTreeMap::new();
@@ -106,7 +111,11 @@ pub async fn register_show(
         .await
         .reg_footer()
         .await;
-    register_tpl.reg_script_values().await.reg_script_lang().await;
+    register_tpl
+        .reg_script_values()
+        .await
+        .reg_script_lang()
+        .await;
 
     let mut data: BTreeMap<&str, Value> = BTreeMap::new();
     data.insert("language", json!(language));
@@ -130,7 +139,11 @@ pub async fn register_submit(
         .await
         .reg_footer()
         .await;
-    register_tpl.reg_script_values().await.reg_script_lang().await;
+    register_tpl
+        .reg_script_values()
+        .await
+        .reg_script_lang()
+        .await;
 
     let mut data: BTreeMap<&str, Value> = BTreeMap::new();
     data.insert("language", json!(language));
@@ -239,7 +252,11 @@ pub async fn sign_in_show(
         .await
         .reg_footer()
         .await;
-    sign_in_tpl.reg_script_values().await.reg_script_lang().await;
+    sign_in_tpl
+        .reg_script_values()
+        .await
+        .reg_script_lang()
+        .await;
 
     let mut data: BTreeMap<&str, Value> = BTreeMap::new();
     data.insert("language", json!(language));
@@ -263,7 +280,11 @@ pub async fn sign_in_submit(
         .await
         .reg_footer()
         .await;
-    sign_in_tpl.reg_script_values().await.reg_script_lang().await;
+    sign_in_tpl
+        .reg_script_values()
+        .await
+        .reg_script_lang()
+        .await;
 
     let mut data: BTreeMap<&str, Value> = BTreeMap::new();
     data.insert("language", json!(language));

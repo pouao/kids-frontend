@@ -19,9 +19,14 @@ impl<'hbs> Hbs<'hbs> {
         // create the handlebars registry
         let mut hbs_reg = Handlebars::new();
         // register template from a file and assign a name to it
-        hbs_reg.register_template_file(&tpl_name, &abs_path).unwrap();
+        hbs_reg
+            .register_template_file(&tpl_name, &abs_path)
+            .unwrap();
 
-        Hbs { name: tpl_name, reg: hbs_reg }
+        Hbs {
+            name: tpl_name,
+            reg: hbs_reg,
+        }
     }
 
     pub async fn render<T>(&self, data: &T) -> Html<String>
