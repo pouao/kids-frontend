@@ -1,7 +1,12 @@
 use std::collections::BTreeMap;
-use tide::{Request, Response, Redirect};
+use axum::{
+    extract::{Path, Query},
+    response::{IntoResponse, Redirect},
+};
+use axum_extra::extract::CookieJar;
 use graphql_client::{GraphQLQuery, Response as GqlResponse};
-use serde_json::json;
+use reqwest::Client;
+use serde_json::{json, Value};
 
 use crate::util::{
     common::{gql_url, sign_status},
@@ -13,14 +18,16 @@ use crate::models::{
     Page,
     projects::{
         ProjectsData, projects_data, ProjectData, project_data,
-        ProjectUpdateOneFieldByIdData, project_update_one_field_by_id_data,
+        ProjectUpdateOneFieldByIdData,
+        project_update_one_field_by_id_data,
     },
 };
 
-pub async fn admin_index(req: Request<State>) -> tide::Result {
-    let sign_status = sign_status(&req).await;
+pub async fn admin_index(cookie_jar: CookieJar) -> impl IntoResponse {
+    let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
-        let mut admin_index_tpl: Hbs = Hbs::new("admin/admin-index").await;
+        let mut admin_index_tpl: Hbs =
+            Hbs::new("admin/admin-index").await;
         admin_index_tpl
             .reg_head()
             .await
@@ -30,25 +37,33 @@ pub async fn admin_index(req: Request<State>) -> tide::Result {
             .await
             .reg_footer()
             .await;
-        admin_index_tpl.reg_script_values().await.reg_script_lang().await;
+        admin_index_tpl
+            .reg_script_values()
+            .await
+            .reg_script_lang()
+            .await;
 
         let mut data: BTreeMap<&str, Value> = BTreeMap::new();
         data.insert("language", json!("zh-cn"));
         data.insert("nav-admin-selected", json!("is-selected"));
-        insert_user_by_username(sign_status.username, &mut data).await;
+        insert_user_by_username(sign_status.username, &mut data)
+            .await;
 
-        admin_index_tpl.render(&data).await
+        admin_index_tpl.render(&data).await.into_response()
     } else {
-        let resp: Response = Redirect::new("/zh-cn/sign-in").into();
-
-        Ok(resp.into())
+        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        sign_in_redirect.into_response()
     }
 }
 
-pub async fn projects_admin(req: Request<State>) -> tide::Result {
-    let sign_status = sign_status(&req).await;
+pub async fn projects_admin(
+    cookie_jar: CookieJar,
+    Query(page): Query<Page>,
+) -> impl IntoResponse {
+    let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
-        let mut admin_projects_tpl: Hbs = Hbs::new("admin/admin-projects").await;
+        let mut admin_projects_tpl: Hbs =
+            Hbs::new("admin/admin-projects").await;
         admin_projects_tpl
             .reg_head()
             .await
@@ -60,41 +75,56 @@ pub async fn projects_admin(req: Request<State>) -> tide::Result {
             .await
             .reg_footer()
             .await;
-        admin_projects_tpl.reg_script_values().await.reg_script_lang().await;
+        admin_projects_tpl
+            .reg_script_values()
+            .await
+            .reg_script_lang()
+            .await;
 
         let mut data: BTreeMap<&str, Value> = BTreeMap::new();
         data.insert("language", json!("zh-cn"));
         data.insert("nav-admin-selected", json!("is-selected"));
-        insert_user_by_username(sign_status.username, &mut data).await;
+        insert_user_by_username(sign_status.username, &mut data)
+            .await;
 
-        let page: Page = req.query()?;
-        let projects_build_query = ProjectsData::build_query(projects_data::Variables {
-            from_page: page.from,
-            first_oid: page.first,
-            last_oid: page.last,
-            status: 0,
-        });
-        let projects_query = json!(projects_build_query);
+        let projects_build_query =
+            ProjectsData::build_query(projects_data::Variables {
+                from_page: page.from,
+                first_oid: page.first,
+                last_oid: page.last,
+                status: 0,
+            });
+        let projects_query_json = json!(projects_build_query);
 
+        let projects_resp_head = Client::new()
+            .post(&gql_url().await)
+            .json(&projects_query_json)
+            .send()
+            .await
+            .unwrap();
         let projects_resp_body: GqlResponse<Value> =
-            surf::post(&gql_uri().await).body(projects_query).recv_json().await.unwrap();
-        let projects_resp_data = projects_resp_body.data.expect("无响应数据");
+            projects_resp_head.json().await.unwrap();
+        let projects_resp_data =
+            projects_resp_body.data.expect("无响应数据");
 
         let projects = projects_resp_data["projects"].clone();
         data.insert("pagination", projects);
 
-        admin_projects_tpl.render(&data).await
+        admin_projects_tpl.render(&data).await.into_response()
     } else {
-        let resp: Response = Redirect::new("/zh-cn/sign-in").into();
-
-        Ok(resp.into())
+        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        sign_in_redirect.into_response()
     }
 }
 
-pub async fn project_admin(req: Request<State>) -> tide::Result {
-    let sign_status = sign_status(&req).await;
+pub async fn project_admin(
+    cookie_jar: CookieJar,
+    Path(project_id): Path<String>,
+) -> impl IntoResponse {
+    let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
-        let mut project_index_tpl: Hbs = Hbs::new("admin/admin-project-detail").await;
+        let mut project_index_tpl: Hbs =
+            Hbs::new("admin/admin-project-detail").await;
         project_index_tpl
             .reg_head()
             .await
@@ -115,72 +145,84 @@ pub async fn project_admin(req: Request<State>) -> tide::Result {
         let mut data: BTreeMap<&str, Value> = BTreeMap::new();
         data.insert("language", json!("zh-cn"));
         data.insert("nav-admin-selected", json!("is-selected"));
-        insert_user_by_username(sign_status.username, &mut data).await;
+        insert_user_by_username(sign_status.username, &mut data)
+            .await;
 
-        let project_id = req.param("project_id")?;
+        let project_update_hits_build_query =
+            ProjectUpdateOneFieldByIdData::build_query(
+                project_update_one_field_by_id_data::Variables {
+                    project_id: project_id.clone(),
+                    field_name: String::from("hits"),
+                    field_val: String::from("3"),
+                },
+            );
+        let project_update_hits_query_json =
+            json!(project_update_hits_build_query);
+        let _project_update_hits_resp_hea = Client::new()
+            .post(&gql_url().await)
+            .json(&project_update_hits_query_json)
+            .send()
+            .await
+            .unwrap();
 
-        let project_update_hits_build_query = ProjectUpdateOneFieldByIdData::build_query(
-            project_update_one_field_by_id_data::Variables {
-                project_id: project_id.to_string(),
-                field_name: String::from("hits"),
-                field_val: String::from("3"),
-            },
-        );
-        let project_update_hits_query = json!(project_update_hits_build_query);
-        let _project_update_hits_resp_body: GqlResponse<Value> =
-            surf::post(&gql_uri().await)
-                .body(project_update_hits_query)
-                .recv_json()
-                .await?;
+        let project_build_query =
+            ProjectData::build_query(project_data::Variables {
+                project_id: project_id,
+            });
+        let project_query_json = json!(project_build_query);
 
-        let project_build_query = ProjectData::build_query(project_data::Variables {
-            project_id: project_id.to_string(),
-        });
-        let project_query = json!(project_build_query);
-
+        let project_resp_head = Client::new()
+            .post(&gql_url().await)
+            .json(&project_query_json)
+            .send()
+            .await
+            .unwrap();
         let project_resp_body: GqlResponse<Value> =
-            surf::post(&gql_uri().await).body(project_query).recv_json().await?;
-        let project_resp_data = project_resp_body.data.expect("无响应数据");
+            project_resp_head.json().await.unwrap();
+        let project_resp_data =
+            project_resp_body.data.expect("无响应数据");
 
         let project = project_resp_data["projectById"].clone();
         data.insert("project", project);
 
-        project_index_tpl.render(&data).await
+        project_index_tpl.render(&data).await.into_response()
     } else {
-        let resp: Response = Redirect::new("/zh-cn/sign-in").into();
-
-        Ok(resp.into())
+        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        sign_in_redirect.into_response()
     }
 }
 
-pub async fn project_update_one_field(req: Request<State>) -> tide::Result {
-    let sign_status = sign_status(&req).await;
+pub async fn project_update_one_field(
+    cookie_jar: CookieJar,
+    Path(project_id): Path<String>,
+    Path(field_name): Path<String>,
+    Path(field_val): Path<String>,
+) -> impl IntoResponse {
+    let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
-        let project_id = req.param("project_id")?;
-        let field_name = req.param("field_name")?;
-        let field_val = req.param("field_val")?;
+        let project_update_hits_build_query =
+            ProjectUpdateOneFieldByIdData::build_query(
+                project_update_one_field_by_id_data::Variables {
+                    project_id: project_id.clone(),
+                    field_name: field_name,
+                    field_val: field_val,
+                },
+            );
+        let project_update_hits_query_json =
+            json!(project_update_hits_build_query);
+        let _project_update_hits_resp_head = Client::new()
+            .post(&gql_url().await)
+            .json(&project_update_hits_query_json)
+            .send()
+            .await
+            .unwrap();
 
-        let project_update_hits_build_query = ProjectUpdateOneFieldByIdData::build_query(
-            project_update_one_field_by_id_data::Variables {
-                project_id: String::from(project_id),
-                field_name: String::from(field_name),
-                field_val: String::from(field_val),
-            },
+        let admin_project_redirect = Redirect::permanent(
+            format!("/admin/project/{}", project_id).as_str(),
         );
-        let project_update_hits_query = json!(project_update_hits_build_query);
-        let _project_update_hits_resp_body: GqlResponse<Value> =
-            surf::post(&gql_uri().await)
-                .body(project_update_hits_query)
-                .recv_json()
-                .await?;
-
-        let resp: Response =
-            Redirect::new(format!("/admin/project/{}", project_id)).into();
-
-        Ok(resp.into())
+        admin_project_redirect.into_response()
     } else {
-        let resp: Response = Redirect::new("/zh-cn/sign-in").into();
-
-        Ok(resp.into())
+        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        sign_in_redirect.into_response()
     }
 }

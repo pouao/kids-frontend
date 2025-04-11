@@ -3,7 +3,7 @@ use graphql_client::{GraphQLQuery, Response as GqlResponse};
 use serde_json::{json, Value};
 use axum::{
     http::HeaderMap,
-    response::IntoResponse,
+    response::{IntoResponse, Redirect},
     extract::{Path, Form},
 };
 use axum_extra::extract::cookie::{Cookie, CookieJar};
@@ -326,7 +326,7 @@ pub async fn sign_in_submit(
         set_cookie(&mut token_cookie).await;
         let _ = cookie_jar.add(token_cookie);
 
-        let projects_redirect = axum::response::Redirect::permanent(
+        let projects_redirect = Redirect::permanent(
             format!("/{}/projects", language).as_str(),
         );
         projects_redirect.into_response()
@@ -355,9 +355,8 @@ pub async fn sign_out(
     let _ = cookie_jar.clone().remove(Cookie::from("username"));
     let _ = cookie_jar.remove(Cookie::from("token"));
 
-    let home_redirect = axum::response::Redirect::permanent(
-        format!("/{}", language).as_str(),
-    );
+    let home_redirect =
+        Redirect::permanent(format!("/{}", language).as_str());
     home_redirect.into_response()
 }
 
