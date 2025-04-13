@@ -5,25 +5,7 @@ use fluent_bundle::{
 use serde_json::{Map, Value};
 use axum_extra::extract::cookie::CookieJar;
 
-use crate::util::constant::CFG;
 use crate::models::users::SignStatus;
-
-pub async fn gql_url() -> String {
-    let gql_prot = CFG.get("GQL_PROT").unwrap();
-    let gql_host = CFG.get("GQL_HOST").unwrap();
-    let gql_port = CFG.get("GQL_PORT").unwrap();
-    let gql_path = CFG.get("GQL_PATH").unwrap();
-
-    format!("{}://{}:{}/{}", gql_prot, gql_host, gql_port, gql_path)
-}
-
-pub async fn scripts_dir() -> String {
-    format!("./assets/{}/", "scripts")
-}
-
-pub async fn tpls_dir() -> String {
-    format!("./{}/", "templates")
-}
 
 pub fn get_lang_msg(
     lang_id: &str,

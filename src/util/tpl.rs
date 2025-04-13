@@ -3,7 +3,10 @@ use handlebars::{
     Handlebars, Context, Helper, Output, RenderContext, RenderError,
 };
 
-use super::common::{scripts_dir, tpls_dir, get_lang_msg};
+use super::{
+    constant::{TPLS_DIR, SCRIPTS_DIR},
+    common::get_lang_msg,
+};
 
 pub struct Hbs<'hbs> {
     pub name: String,
@@ -13,8 +16,7 @@ pub struct Hbs<'hbs> {
 impl<'hbs> Hbs<'hbs> {
     pub async fn new(rel_path: &str) -> Hbs<'hbs> {
         let tpl_name = rel_path.replace("/", "_");
-        let abs_path =
-            format!("{}{}.html", &tpls_dir().await, &rel_path);
+        let abs_path = format!("{}/{}.html", TPLS_DIR, &rel_path);
 
         // create the handlebars registry
         let mut hbs_reg = Handlebars::new();
@@ -40,7 +42,7 @@ impl<'hbs> Hbs<'hbs> {
         self.reg
             .register_template_file(
                 "head",
-                format!("{}{}", tpls_dir().await, "common/head.html"),
+                format!("{}/{}", TPLS_DIR, "common/head.html"),
             )
             .unwrap();
 
@@ -51,37 +53,28 @@ impl<'hbs> Hbs<'hbs> {
         self.reg
             .register_template_file(
                 "nav-global",
-                format!(
-                    "{}{}",
-                    tpls_dir().await,
-                    "common/nav-global.html"
-                ),
+                format!("{}/{}", TPLS_DIR, "common/nav-global.html"),
             )
             .unwrap();
         self.reg
             .register_template_file(
                 "sign",
-                format!("{}{}", tpls_dir().await, "common/sign.html"),
+                format!("{}/{}", TPLS_DIR, "common/sign.html"),
             )
             .unwrap();
         self.reg
             .register_template_file(
                 "sign-popover",
                 format!(
-                    "{}{}",
-                    tpls_dir().await,
-                    "common/sign-popover.html"
+                    "{}/{}",
+                    TPLS_DIR, "common/sign-popover.html"
                 ),
             )
             .unwrap();
         self.reg
             .register_template_file(
                 "header",
-                format!(
-                    "{}{}",
-                    tpls_dir().await,
-                    "common/header.html"
-                ),
+                format!("{}/{}", TPLS_DIR, "common/header.html"),
             )
             .unwrap();
 
@@ -92,11 +85,7 @@ impl<'hbs> Hbs<'hbs> {
         self.reg
             .register_template_file(
                 "wish-random",
-                format!(
-                    "{}{}",
-                    tpls_dir().await,
-                    "common/wish-random.html"
-                ),
+                format!("{}/{}", TPLS_DIR, "common/wish-random.html"),
             )
             .unwrap();
 
@@ -107,11 +96,7 @@ impl<'hbs> Hbs<'hbs> {
         self.reg
             .register_template_file(
                 "pagination",
-                format!(
-                    "{}{}",
-                    tpls_dir().await,
-                    "common/pagination.html"
-                ),
+                format!("{}/{}", TPLS_DIR, "common/pagination.html"),
             )
             .unwrap();
 
@@ -122,11 +107,7 @@ impl<'hbs> Hbs<'hbs> {
         self.reg
             .register_template_file(
                 "footer",
-                format!(
-                    "{}{}",
-                    tpls_dir().await,
-                    "common/footer.html"
-                ),
+                format!("{}/{}", TPLS_DIR, "common/footer.html"),
             )
             .unwrap();
 
@@ -138,39 +119,29 @@ impl<'hbs> Hbs<'hbs> {
             .register_script_helper_file(
                 "helper-values",
                 format!(
-                    "{}{}",
-                    scripts_dir().await,
-                    "values/helper-values.rhai"
+                    "{}/{}",
+                    SCRIPTS_DIR, "values/helper-values.rhai"
                 ),
             )
             .unwrap();
         self.reg
             .register_script_helper_file(
                 "str-cmp",
-                format!(
-                    "{}{}",
-                    scripts_dir().await,
-                    "values/str-cmp.rhai"
-                ),
+                format!("{}/{}", SCRIPTS_DIR, "values/str-cmp.rhai"),
             )
             .unwrap();
         self.reg
             .register_script_helper_file(
                 "str-cut",
-                format!(
-                    "{}{}",
-                    scripts_dir().await,
-                    "values/str-cut.rhai"
-                ),
+                format!("{}/{}", SCRIPTS_DIR, "values/str-cut.rhai"),
             )
             .unwrap();
         self.reg
             .register_script_helper_file(
                 "value-check",
                 format!(
-                    "{}{}",
-                    scripts_dir().await,
-                    "values/value-check.rhai"
+                    "{}/{}",
+                    SCRIPTS_DIR, "values/value-check.rhai"
                 ),
             )
             .unwrap();
@@ -182,31 +153,19 @@ impl<'hbs> Hbs<'hbs> {
         self.reg
             .register_script_helper_file(
                 "add-op",
-                format!(
-                    "{}{}",
-                    scripts_dir().await,
-                    "ops/add-op.rhai"
-                ),
+                format!("{}/{}", SCRIPTS_DIR, "ops/add-op.rhai"),
             )
             .unwrap();
         self.reg
             .register_script_helper_file(
                 "level-op",
-                format!(
-                    "{}{}",
-                    scripts_dir().await,
-                    "ops/level-op.rhai"
-                ),
+                format!("{}/{}", SCRIPTS_DIR, "ops/level-op.rhai"),
             )
             .unwrap();
         self.reg
             .register_script_helper_file(
                 "sci-format",
-                format!(
-                    "{}{}",
-                    scripts_dir().await,
-                    "ops/sci-format.rhai"
-                ),
+                format!("{}/{}", SCRIPTS_DIR, "ops/sci-format.rhai"),
             )
             .unwrap();
 

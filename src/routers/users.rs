@@ -10,7 +10,8 @@ use axum_extra::extract::cookie::CookieJar;
 use reqwest::Client;
 
 use crate::util::{
-    common::{gql_url, sign_status},
+    constant::CFG,
+    common::sign_status,
     email::send_email,
     tpl::Hbs,
     tpl_data::{insert_user_by_username, insert_wish_random},
@@ -73,7 +74,7 @@ pub async fn users_index(
     let users_query_json = json!(users_build_query);
 
     let users_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&users_query_json)
         .send()
         .await
@@ -134,7 +135,7 @@ pub async fn user_index(
         json!(author_by_username_detail_build_query);
 
     let author_by_username_detail_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&author_by_username_detail_query_json)
         .send()
         .await
@@ -191,7 +192,7 @@ pub async fn user_activate(
                 json!(user_resend_build_query);
 
             let user_resend_resp_head = Client::new()
-                .post(&gql_url().await)
+                .post(CFG.get("GQL_URL").unwrap())
                 .json(&user_resend_query_json)
                 .send()
                 .await
@@ -228,7 +229,7 @@ pub async fn user_activate(
                 json!(user_activate_build_query);
 
             let user_activate_resp_head = Client::new()
-                .post(&gql_url().await)
+                .post(CFG.get("GQL_URL").unwrap())
                 .json(&user_activate_query_json)
                 .send()
                 .await

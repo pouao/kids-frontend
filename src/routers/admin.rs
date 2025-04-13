@@ -9,8 +9,7 @@ use reqwest::Client;
 use serde_json::{json, Value};
 
 use crate::util::{
-    common::{gql_url, sign_status},
-    tpl::Hbs,
+    constant::CFG, common::sign_status, tpl::Hbs,
     tpl_data::insert_user_by_username,
 };
 
@@ -97,7 +96,7 @@ pub async fn projects_admin(
         let projects_query_json = json!(projects_build_query);
 
         let projects_resp_head = Client::new()
-            .post(&gql_url().await)
+            .post(CFG.get("GQL_URL").unwrap())
             .json(&projects_query_json)
             .send()
             .await
@@ -159,7 +158,7 @@ pub async fn project_admin(
         let project_update_hits_query_json =
             json!(project_update_hits_build_query);
         let _project_update_hits_resp_hea = Client::new()
-            .post(&gql_url().await)
+            .post(CFG.get("GQL_URL").unwrap())
             .json(&project_update_hits_query_json)
             .send()
             .await
@@ -172,7 +171,7 @@ pub async fn project_admin(
         let project_query_json = json!(project_build_query);
 
         let project_resp_head = Client::new()
-            .post(&gql_url().await)
+            .post(CFG.get("GQL_URL").unwrap())
             .json(&project_query_json)
             .send()
             .await
@@ -211,7 +210,7 @@ pub async fn project_update_one_field(
         let project_update_hits_query_json =
             json!(project_update_hits_build_query);
         let _project_update_hits_resp_head = Client::new()
-            .post(&gql_url().await)
+            .post(CFG.get("GQL_URL").unwrap())
             .json(&project_update_hits_query_json)
             .send()
             .await

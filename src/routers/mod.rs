@@ -6,14 +6,16 @@ pub mod topics;
 pub mod admin;
 
 use std::sync::Arc;
-use axum::{Router, routing::get};
+use axum::{
+    Router,
+    routing::{get, put},
+};
 use tower_http::services::{ServeDir, ServeFile};
 
 pub struct AppState {}
 
 pub async fn push_router() -> Router {
     let app_state = Arc::new(AppState {});
-
     let mut app_router = Router::new()
         .with_state(app_state)
         .route("/", get(super::routers::home::init))
@@ -69,33 +71,44 @@ pub async fn push_router() -> Router {
         );
     app_router = app_router.nest("/{language}/users", users_router);
 
+    let projects_router = Router::new()
+        .route("/", get(super::routers::projects::projects_index))
+        .route(
+            "/{filter_str}",
+            get(super::routers::projects::projects_filter),
+        )
+        .route(
+            "/project",
+            get(super::routers::projects::project_random),
+        )
+        .route(
+            "/project-{project_id}",
+            get(super::routers::projects::project_index),
+        )
+        .route(
+            "/project-new",
+            get(super::routers::projects::project_new_show)
+                .post(super::routers::projects::project_new_submit),
+        )
+        .route(
+            "/project-new/file/{file_name}/{file_kind}",
+            put(super::routers::projects::file_new),
+        );
+    app_router =
+        app_router.nest("/{language}/projects", projects_router);
+
+    let categories_router = Router::new().route(
+        "/{category_slug}/projects",
+        get(super::routers::projects::projects_by_category),
+    );
+    app_router =
+        app_router.nest("/{language}/categories", categories_router);
+
+    let topics_router = Router::new().route(
+        "/{topic_slug}/projects",
+        get(super::routers::projects::projects_by_topic),
+    );
+    app_router = app_router.nest("/{language}/topics", topics_router);
+
     app_router
 }
-
-//     let mut projects = home.at("/projects");
-//     projects.at("/").get(super::routes::projects::projects_index);
-//     projects.at("/:filter_str").get(super::routes::projects::projects_filter);
-
-//     let mut project = home.at("/project");
-//     project.at("/").get(super::routes::projects::project_random);
-//     project
-//         .at("/new")
-//         .get(super::routes::projects::project_new)
-//         .post(super::routes::projects::project_new);
-//     project.at("/:project_id").get(super::routes::projects::project_index);
-//     project
-//         .at("/file/new/:file_name/:file_kind")
-//         .put(super::routes::projects::file_new);
-
-//     // let mut categories = app.at("/categories");
-//     let mut category = home.at("/category");
-//     category
-//         .at("/:category_slug/projects")
-//         .get(super::routes::projects::projects_by_category);
-
-//     // let mut topics = app.at("/topics");
-//     let mut topic = home.at("/topic");
-//     topic
-//         .at("/:topic_slug/projects")
-//         .get(super::routes::projects::projects_by_topic);
-// }

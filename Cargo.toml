@@ -7,7 +7,8 @@ edition = "2024"
 [dependencies]
 futures = "0.3"
 tokio = { version = "1.44", features = ["full"] }
-axum = "0.8"
+tokio-util = { version = "0.7", features = ["io"] }
+axum = { version = "0.8", features = ["multipart"] }
 axum-extra = { version = "0.10", features = ["cookie", "cookie-signed"] }
 
 tower-http = { version = "0.6", features = ["fs", "trace"] }
@@ -22,7 +23,6 @@ reqwest = { version = "0.12", features = ["json"] }
 graphql_client = "0.14"
 handlebars = { version = "6.3", features = ["script_helper"] }
 
-multer = "3.1"
 percent-encoding = "2.3"
 fluent-bundle = "0.15"
 lettre = "0.11"

@@ -1,62 +1,60 @@
-use futures::AsyncWriteExt;
-use std::pin::Pin;
-use async_std::{
-    io::{self, Read},
-    stream::Stream,
-    fs::File,
-    path::PathBuf,
-    task::{Context, Poll},
+use futures::{Stream, TryStreamExt};
+use std::{
+    io::Error as std_io_error,
+    path::{Path, Component},
 };
-use tide::Request;
-use multer::Multipart;
+use axum::{BoxError, http::StatusCode, body::Bytes};
+use tokio::{fs::File, io::BufWriter};
+use tokio_util::io::StreamReader;
 
-use crate::State;
-
-// Process the request body as multipart/form-data.
-pub async fn file_copy(
-    req: Request<State>,
-    file_path: PathBuf,
-) -> Result<(), io::Error> {
-    let boundary =
-        req.content_type().unwrap().param("boundary").unwrap().to_string();
-    let body_stream = BufferedBytesStream { inner: req };
-
-    let mut multipart = Multipart::new(body_stream, boundary);
-    let multipart_field = multipart.next_field().await.unwrap();
-    let field_chunk = multipart_field.unwrap().chunk().await.unwrap();
-
-    let mut file = File::create(file_path).await?;
-    let file_copy = file.write_all(&field_chunk.unwrap()).await;
-
-    if file_copy.is_ok() {
-        file.flush().await
-    } else {
-        file_copy
+// Save a `Stream` to a file
+pub async fn stream_to_file<S, E>(
+    path: &str,
+    stream: S,
+) -> Result<(), (StatusCode, String)>
+where
+    S: Stream<Item = Result<Bytes, E>>,
+    E: Into<BoxError>,
+{
+    if !path_is_valid(path) {
+        return Err((
+            StatusCode::BAD_REQUEST,
+            "Invalid path".to_owned(),
+        ));
     }
+
+    async {
+        // Convert the stream into an `AsyncRead`.
+        let body_with_io_error = stream.map_err(std_io_error::other);
+        let body_reader = StreamReader::new(body_with_io_error);
+        futures::pin_mut!(body_reader);
+
+        // Create the file. `File` implements `AsyncWrite`.
+        let path = Path::new(super::constant::FILES_DIR).join(path);
+        let mut file = BufWriter::new(File::create(path).await?);
+
+        // Copy the body into the file.
+        tokio::io::copy(&mut body_reader, &mut file).await?;
+
+        Ok::<_, std_io_error>(())
+    }
+    .await
+    .map_err(|err| {
+        (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
+    })
 }
 
-#[derive(Debug)]
-struct BufferedBytesStream<T> {
-    inner: T,
-}
+// to prevent directory traversal attacks
+// ensure the path consists of exactly one normal component
+fn path_is_valid(path: &str) -> bool {
+    let path = Path::new(path);
+    let mut components = path.components().peekable();
 
-impl<T: Read + Unpin> Stream for BufferedBytesStream<T> {
-    type Item = async_std::io::Result<Vec<u8>>;
-
-    fn poll_next(
-        mut self: Pin<&mut Self>,
-        cx: &mut Context<'_>,
-    ) -> Poll<Option<Self::Item>> {
-        let mut buf = [0u8; 2048];
-
-        let rd = Pin::new(&mut self.inner);
-        match futures::ready!(rd.poll_read(cx, &mut buf)) {
-            Ok(0) => Poll::Ready(None),
-            Ok(n) => Poll::Ready(Some(Ok(buf[..n].to_vec()))),
-            Err(ref e) if e.kind() == io::ErrorKind::Interrupted => {
-                Poll::Pending
-            }
-            Err(e) => Poll::Ready(Some(Err(e))),
+    if let Some(first) = components.peek() {
+        if !matches!(first, Component::Normal(_)) {
+            return false;
         }
     }
+
+    components.count() == 1
 }

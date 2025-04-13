@@ -4,8 +4,9 @@ use std::{
 };
 use graphql_client::{GraphQLQuery, Response as GqlResponse};
 use axum::{
+    Json,
     response::{IntoResponse, Redirect},
-    extract::{Path, Query, Form},
+    extract::{Path, Query, Form, Multipart},
 };
 use axum_extra::extract::cookie::CookieJar;
 use serde_json::{json, Value};
@@ -13,13 +14,14 @@ use reqwest::Client;
 use percent_encoding::percent_decode;
 
 use crate::util::{
-    common::{gql_url, sign_status},
+    constant::CFG,
+    common::sign_status,
     tpl::Hbs,
     tpl_data::{
         insert_user_by_username, insert_wish_random,
         insert_categories,
     },
-    // upload::file_copy,
+    upload::stream_to_file,
 };
 
 use crate::models::{
@@ -90,7 +92,7 @@ pub async fn projects_index(
     let projects_query_json = json!(projects_build_query);
 
     let projects_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&projects_query_json)
         .send()
         .await
@@ -153,7 +155,7 @@ pub async fn projects_by_user(
         json!(author_by_username_build_query);
 
     let author_by_username_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&author_by_username_query_json)
         .send()
         .await
@@ -192,7 +194,7 @@ pub async fn projects_by_user(
         json!(projects_by_user_build_query);
 
     let projects_by_user_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&projects_by_user_query_json)
         .send()
         .await
@@ -257,7 +259,7 @@ pub async fn projects_by_category(
         json!(category_by_slug_build_query);
 
     let category_by_slug_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&category_by_slug_query_json)
         .send()
         .await
@@ -294,7 +296,7 @@ pub async fn projects_by_category(
         json!(projects_by_category_build_query);
 
     let projects_by_category_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&projects_by_category_query_json)
         .send()
         .await
@@ -357,7 +359,7 @@ pub async fn projects_by_topic(
     let topic_by_slug_query_json = json!(topic_by_slug_build_query);
 
     let topic_by_slug_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&topic_by_slug_query_json)
         .send()
         .await
@@ -390,7 +392,7 @@ pub async fn projects_by_topic(
         json!(projects_by_topic_build_query);
 
     let projects_by_topic_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&projects_by_topic_query_json)
         .send()
         .await
@@ -408,8 +410,7 @@ pub async fn projects_by_topic(
 }
 
 pub async fn projects_filter(
-    Path(language): Path<String>,
-    Path(filter_str): Path<String>,
+    Path((language, filter_str)): Path<(String, String)>,
     Query(page): Query<Page>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
@@ -463,7 +464,7 @@ pub async fn projects_filter(
                 json!(projects_recommended_build_query);
 
             let projects_recommended_resp_head = Client::new()
-                .post(&gql_url().await)
+                .post(CFG.get("GQL_URL").unwrap())
                 .json(&projects_recommended_query_json)
                 .send()
                 .await
@@ -527,15 +528,17 @@ pub async fn project_new_show(
 
         project_new_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        let sign_in_redirect = Redirect::permanent(
+            format!("/{}/sign-in", language).as_str(),
+        );
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn project_new_submit(
     Path(language): Path<String>,
-    Form(project_info): Form<ProjectInfo>,
     cookie_jar: CookieJar,
+    Form(project_info): Form<ProjectInfo>,
 ) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
@@ -579,7 +582,7 @@ pub async fn project_new_submit(
         let project_new_query_json = json!(project_new_build_query);
 
         let project_new_resp_head = Client::new()
-            .post(&gql_url().await)
+            .post(CFG.get("GQL_URL").unwrap())
             .json(&project_new_query_json)
             .send()
             .await
@@ -603,7 +606,7 @@ pub async fn project_new_submit(
             let topics_query_json = json!(topics_build_query);
 
             let topics_resp_head = Client::new()
-                .post(&gql_url().await)
+                .post(CFG.get("GQL_URL").unwrap())
                 .json(&topics_query_json)
                 .send()
                 .await
@@ -629,7 +632,7 @@ pub async fn project_new_submit(
                     let topic_project_new_query_json =
                         json!(topic_project_new_build_query);
                     let _topic_project_new_resp_head = Client::new()
-                        .post(&gql_url().await)
+                        .post(CFG.get("GQL_URL").unwrap())
                         .json(&topic_project_new_query_json)
                         .send()
                         .await
@@ -654,7 +657,7 @@ pub async fn project_new_submit(
                 let project_file_new_query_json =
                     json!(project_file_new_build_query);
                 let _project_file_new_resp_head = Client::new()
-                    .post(&gql_url().await)
+                    .post(CFG.get("GQL_URL").unwrap())
                     .json(&project_file_new_query_json)
                     .send()
                     .await
@@ -674,14 +677,15 @@ pub async fn project_new_submit(
 
         project_new_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        let sign_in_redirect = Redirect::permanent(
+            format!("/{}/sign-in", language).as_str(),
+        );
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn project_index(
-    Path(language): Path<String>,
-    Path(project_id): Path<String>,
+    Path((language, project_id)): Path<(String, String)>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let mut project_index_tpl: Hbs =
@@ -726,7 +730,7 @@ pub async fn project_index(
     let project_update_hits_query_json =
         json!(project_update_hits_build_query);
     let _project_update_hits_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&project_update_hits_query_json)
         .send()
         .await
@@ -739,7 +743,7 @@ pub async fn project_index(
     let project_query_json = json!(project_build_query);
 
     let project_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&project_query_json)
         .send()
         .await
@@ -764,7 +768,7 @@ pub async fn project_random(
     let project_random_query_json = json!(project_random_build_query);
 
     let project_random_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&project_random_query_json)
         .send()
         .await
@@ -780,72 +784,73 @@ pub async fn project_random(
             .unwrap();
 
     let project_redirect = Redirect::permanent(
-        format!("/{}/project/{}", language, project_random_id)
+        format!("/{}/projects/{}", language, project_random_id)
             .as_str(),
     );
     project_redirect.into_response()
 }
 
-// pub async fn file_new(
-//     Path(language): Path<String>,
-//     Path(file_name_percent): Path<String>,
-//     Path(file_kind): Path<String>,
-// ) -> impl IntoResponse {
-//     let file_name_percent_de =
-//         percent_decode(file_name_percent.as_bytes());
-//     let file_name = String::from(file_name_percent_de.decode_utf8()?);
+pub async fn file_new(
+    Path(language): Path<String>,
+    Path(file_name_percent): Path<String>,
+    Path(file_kind): Path<i64>,
+    mut multipart: Multipart,
+) -> impl IntoResponse {
+    let upload_err = match language.as_str() {
+        "zh-cn" => "上传异常：请联系",
+        _ => "Upload exception: please contact",
+    };
+    let mut upload_resp = json!({
+        "done": false,
+        "err": format!("{} {}", upload_err, "ask@niqin.com")
+    });
 
-//     let file_ext_index = file_name.rfind(".");
-//     let now_micros =
-//         SystemTime::now().duration_since(UNIX_EPOCH)?.as_micros();
+    let file_name_decode =
+        percent_decode(file_name_percent.as_bytes());
+    let file_name = file_name_decode.decode_utf8().unwrap();
+    let now_micros = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_micros();
+    let ext_index = file_name.rfind(".").unwrap();
+    let file_location =
+        format!("{}{}", now_micros, &file_name[ext_index..]);
+    let file_path = format!("{}/{}", "projects", file_location);
 
-//     let mut file_location = String::new();
-//     file_location.push_str(now_micros.to_string().as_str());
-//     if let Some(ext_index) = file_ext_index {
-//         file_location.push_str(&file_name[ext_index..]);
-//     }
+    let upload_file = stream_to_file(
+        &file_path,
+        multipart.next_field().await.unwrap().unwrap(),
+    )
+    .await;
+    if upload_file.is_ok() {
+        let file_new_build_query =
+            FileNewData::build_query(file_new_data::Variables {
+                name: file_name.to_string(),
+                kind: file_kind,
+                location: file_location,
+            });
+        let file_new_query_json = json!(file_new_build_query);
 
-//     let file_path =
-//         Path::new("../files/projects").join(&file_location);
-//     let file_copy = file_copy(req, file_path).await;
+        let file_new_resp_head = Client::new()
+            .post(CFG.get("GQL_URL").unwrap())
+            .json(&file_new_query_json)
+            .send()
+            .await
+            .unwrap();
+        let file_new_resp_body: GqlResponse<Value> =
+            file_new_resp_head.json().await.unwrap();
+        let file_new_resp_data =
+            file_new_resp_body.data.expect("无响应数据");
 
-//     let res;
-//     if file_copy.is_ok() {
-//         let file_new_build_query =
-//             FileNewData::build_query(file_new_data::Variables {
-//                 name: file_name.clone(),
-//                 kind: file_kind,
-//                 location: file_location,
-//             });
-//         let file_new_query = json!(file_new_build_query);
+        let file_new_result = file_new_resp_data["fileNew"].clone();
+        let file_id = file_new_result["id"].as_str().unwrap();
 
-//         let file_new_resp_body: GqlResponse<Value> =
-//             surf::post(&gql_uri().await)
-//                 .body(file_new_query)
-//                 .recv_json()
-//                 .await?;
-//         let file_new_resp_data =
-//             file_new_resp_body.data.expect("无响应数据");
+        upload_resp = json!({
+            "done": true,
+            "file_id": file_id,
+            "file_name": file_name,
+        });
+    }
 
-//         let file_new_result = file_new_resp_data["fileNew"].clone();
-//         let file_id = file_new_result["id"].as_str().unwrap();
-
-//         res = json!({
-//             "done": true,
-//             "file_id": file_id,
-//             "file_name": file_name,
-//         });
-//     } else {
-//         let err = match language.as_str() {
-//             "zh-cn" => "上传异常：请联系",
-//             _ => "Upload exception: please contact",
-//         };
-
-//         res = json!({
-//             "done": false,
-//             "err": format!("{} {}", err, "ask@kousun.com")
-//         });
-//     }
-
-//     Ok(res.into())
-// }
+    Json(upload_resp)
+}

@@ -1,6 +1,10 @@
 use lazy_static::lazy_static;
 use std::collections::HashMap;
 
+pub const TPLS_DIR: &str = "templates";
+pub const SCRIPTS_DIR: &str = "assets/scripts";
+pub const FILES_DIR: &str = "files";
+
 lazy_static! {
     // CFG variables defined in .env file
     pub static ref CFG: HashMap<&'static str, String> = {
@@ -20,22 +24,9 @@ lazy_static! {
             "PORT",
             dotenvy::var("PORT").expect("Expected PORT to be set in env!"),
         );
-
         map.insert(
-            "GQL_PROT",
-            dotenvy::var("GQL_PROT").expect("Expected GQL_PROT to be set in env!"),
-        );
-        map.insert(
-            "GQL_HOST",
-            dotenvy::var("GQL_HOST").expect("Expected GQL_HOST to be set in env!"),
-        );
-        map.insert(
-            "GQL_PORT",
-            dotenvy::var("GQL_PORT").expect("Expected GQL_PORT to be set in env!"),
-        );
-        map.insert(
-            "GQL_PATH",
-            dotenvy::var("GQL_PATH").expect("Expected GQL_PATH to be set in env!"),
+            "GQL_URL",
+            dotenvy::var("GQL_URL").expect("Expected GQL_URL to be set in env!"),
         );
 
         map.insert(

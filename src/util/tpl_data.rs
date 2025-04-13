@@ -3,7 +3,7 @@ use graphql_client::{GraphQLQuery, Response as GqlResponse};
 use serde_json::{json, Value};
 use reqwest::Client;
 
-use super::common::gql_url;
+use super::constant::CFG;
 use crate::models::{
     users::{
         UserByUsernameData, user_by_username_data, WishRandomData,
@@ -26,7 +26,7 @@ pub async fn insert_user_by_username(
         json!(user_by_username_build_query);
 
     let user_by_username_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&user_by_username_query_json)
         .send()
         .await
@@ -48,7 +48,7 @@ pub async fn insert_wish_random(data: &mut BTreeMap<&str, Value>) {
     let wish_random_query_json = json!(wish_random_build_query);
 
     let wish_random_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&wish_random_query_json)
         .send()
         .await
@@ -68,7 +68,7 @@ pub async fn insert_categories(data: &mut BTreeMap<&str, Value>) {
     let categories_query_json = json!(categories_build_query);
 
     let categories_resp_head = Client::new()
-        .post(&gql_url().await)
+        .post(CFG.get("GQL_URL").unwrap())
         .json(&categories_query_json)
         .send()
         .await
