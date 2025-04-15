@@ -349,7 +349,6 @@ pub async fn sign_in_submit(
 
 pub async fn sign_out(
     Path(language): Path<String>,
-
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let _ = cookie_jar.clone().remove(Cookie::from("username"));

@@ -784,7 +784,7 @@ pub async fn project_random(
             .unwrap();
 
     let project_redirect = Redirect::permanent(
-        format!("/{}/projects/{}", language, project_random_id)
+        format!("/{}/projects/project-{}", language, project_random_id)
             .as_str(),
     );
     project_redirect.into_response()
