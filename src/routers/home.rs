@@ -268,6 +268,7 @@ pub async fn sign_in_show(
 
 pub async fn sign_in_submit(
     Path(language): Path<String>,
+    mut cookie_jar: CookieJar,
     Form(sign_in_info): Form<SignInInfo>,
 ) -> impl IntoResponse {
     let mut sign_in_tpl: Hbs = Hbs::new("sign-in").await;
@@ -310,26 +311,24 @@ pub async fn sign_in_submit(
 
     if let Some(sign_in_val) = sign_in_resp_data {
         let sign_in_user = sign_in_val["userSignIn"].clone();
-        let cookie_jar = CookieJar::new();
 
         let mut username_cookie = Cookie::new(
             "username",
             String::from(sign_in_user["username"].as_str().unwrap()),
         );
         set_cookie(&mut username_cookie).await;
-        let _ = cookie_jar.clone().add(username_cookie);
+        cookie_jar = cookie_jar.add(username_cookie);
 
         let mut token_cookie = Cookie::new(
             "token",
             String::from(sign_in_user["token"].as_str().unwrap()),
         );
         set_cookie(&mut token_cookie).await;
-        let _ = cookie_jar.add(token_cookie);
+        cookie_jar = cookie_jar.add(token_cookie);
 
-        let projects_redirect = Redirect::permanent(
-            format!("/{}/projects", language).as_str(),
-        );
-        projects_redirect.into_response()
+        let projects_redirect =
+            Redirect::to(format!("/{}/projects", language).as_str());
+        (cookie_jar, projects_redirect).into_response()
     } else {
         let error = sign_in_resp_body.errors.unwrap()[0].clone();
         data.insert("sign_in_failed", json!(error.message));
@@ -355,7 +354,7 @@ pub async fn sign_out(
     let _ = cookie_jar.remove(Cookie::from("token"));
 
     let home_redirect =
-        Redirect::permanent(format!("/{}", language).as_str());
+        Redirect::to(format!("/{}", language).as_str());
     home_redirect.into_response()
 }
 

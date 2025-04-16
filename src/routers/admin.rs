@@ -50,14 +50,14 @@ pub async fn admin_index(cookie_jar: CookieJar) -> impl IntoResponse {
 
         admin_index_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn projects_admin(
-    cookie_jar: CookieJar,
     Query(page): Query<Page>,
+    cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
@@ -111,14 +111,14 @@ pub async fn projects_admin(
 
         admin_projects_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn project_admin(
-    cookie_jar: CookieJar,
     Path(project_id): Path<String>,
+    cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
@@ -186,16 +186,16 @@ pub async fn project_admin(
 
         project_index_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn project_update_one_field(
-    cookie_jar: CookieJar,
     Path(project_id): Path<String>,
     Path(field_name): Path<String>,
     Path(field_val): Path<String>,
+    cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
@@ -216,12 +216,12 @@ pub async fn project_update_one_field(
             .await
             .unwrap();
 
-        let admin_project_redirect = Redirect::permanent(
+        let admin_project_redirect = Redirect::to(
             format!("/admin/project/{}", project_id).as_str(),
         );
         admin_project_redirect.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent("/zh-cn/sign-in");
+        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
         sign_in_redirect.into_response()
     }
 }

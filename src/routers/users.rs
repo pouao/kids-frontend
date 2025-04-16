@@ -90,8 +90,7 @@ pub async fn users_index(
 }
 
 pub async fn user_index(
-    Path(language): Path<String>,
-    Path(author_username): Path<String>,
+    Path((language, author_username)): Path<(String, String)>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let mut user_index_tpl: Hbs =

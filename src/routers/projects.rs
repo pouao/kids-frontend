@@ -47,8 +47,8 @@ use crate::models::{
 
 pub async fn projects_index(
     Path(language): Path<String>,
-    Query(page): Query<Page>,
     cookie_jar: CookieJar,
+    Query(page): Query<Page>,
 ) -> impl IntoResponse {
     let mut projects_index_tpl: Hbs =
         Hbs::new("projects/projects-index").await;
@@ -528,9 +528,8 @@ pub async fn project_new_show(
 
         project_new_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent(
-            format!("/{}/sign-in", language).as_str(),
-        );
+        let sign_in_redirect =
+            Redirect::to(format!("/{}/sign-in", language).as_str());
         sign_in_redirect.into_response()
     }
 }
@@ -677,9 +676,8 @@ pub async fn project_new_submit(
 
         project_new_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::permanent(
-            format!("/{}/sign-in", language).as_str(),
-        );
+        let sign_in_redirect =
+            Redirect::to(format!("/{}/sign-in", language).as_str());
         sign_in_redirect.into_response()
     }
 }
@@ -783,9 +781,12 @@ pub async fn project_random(
             .as_str()
             .unwrap();
 
-    let project_redirect = Redirect::permanent(
-        format!("/{}/projects/project-{}", language, project_random_id)
-            .as_str(),
+    let project_redirect = Redirect::to(
+        format!(
+            "/{}/projects/project-{}",
+            language, project_random_id
+        )
+        .as_str(),
     );
     project_redirect.into_response()
 }
