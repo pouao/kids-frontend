@@ -4,10 +4,6 @@
     <head>
         <title>{{ lang "user-register-intro" }} - {{ lang "site-name" }} | {{ lang "site-slogan" }}</title>
 
-        <meta name="keywords" content='{{ lang "user-register-intro" }},{{ lang "user-register" }},{{ lang "site-name" }},{{
-      lang "site-slogan" }}'>
-        <meta name="description" content='{{ lang "user-register-intro" }} - {{ lang "site-intro" }}'>
-
         {{> head }}
         <link rel="stylesheet" href="/static/css/stacks-editor.min.css">
     </head>
@@ -20,10 +16,8 @@
 
             <div class="ta-center mt16 mb96 mx24 sm:ml4 sm:mr4">
 
-                <a href="/{{ language }}">
-                    <img class="mt32" src="/static/imgs/icons/logo-{{ language }}.svg" width="160" height="53"
-                        alt='{{ lang "site-name" }}' title='{{ lang "site-name" }}' aria-label='{{ lang "site-name" }}'>
-                </a>
+
+                <h1>{{ lang "site-name" }}</h1>
                 <h2 class="mt16 mb32">{{ lang "user-register" }}</h2>
 
                 {{#if register_result }}

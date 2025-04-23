@@ -348,14 +348,14 @@ pub async fn sign_in_submit(
 
 pub async fn sign_out(
     Path(language): Path<String>,
-    cookie_jar: CookieJar,
+    mut cookie_jar: CookieJar,
 ) -> impl IntoResponse {
-    let _ = cookie_jar.clone().remove(Cookie::from("username"));
-    let _ = cookie_jar.remove(Cookie::from("token"));
+    cookie_jar = cookie_jar.remove(Cookie::from("username"));
+    cookie_jar = cookie_jar.remove(Cookie::from("token"));
 
     let home_redirect =
         Redirect::to(format!("/{}", language).as_str());
-    home_redirect.into_response()
+    (cookie_jar, home_redirect).into_response()
 }
 
 async fn set_cookie<'c>(cookie: &mut Cookie<'c>) {

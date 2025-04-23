@@ -1,0 +1,22 @@
+admin-backend = Administrator Backend
+
+projects-review = Projects Review
+users-management = Users Management
+
+delete = Delete
+deleted = Deleted
+reject = Reject
+rejected = Rejected
+draft = Draft
+pending = Pending
+approve = Approve
+approved = Approved
+mass = Mass
+massed = Massed
+
+project-content = Project Content
+project-source-file = Source File: 
+project-contact-person = Contact person: 
+project-contact-phone = Phone: 
+project-contact-im = IM tools: 
+project-contact-email = Email: 

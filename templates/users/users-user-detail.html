@@ -7,10 +7,6 @@
             {{ lang "site-name" }} | {{ lang "site-slogan" }}
         </title>
 
-        <meta name="keywords"
-            content="{{ author_user.nickname }},{{ author_user.username }},{{#each author_user.keywords as |keyword|}}{{ keyword.name }}{{#unless @last }},{{/unless}}{{/each}}">
-        <meta name="description" content="{{ str-cut author_user.introduction 100 }}">
-
         {{> head }}
         <link rel="stylesheet" href="/static/css/night-owl.min.css">
     </head>

@@ -2,7 +2,7 @@
 <html lang="{{ language }}">
 
     <head>
-        <title>后台管理 - 儿童@蔻隼 | 想象、编程、分享</title>
+        <title>{{ lang "admin-backend" }} - {{ lang "site-name" }} | {{ lang "site-slogan" }}</title>
 
         {{> head }}
     </head>
@@ -19,8 +19,8 @@
             </script>
 
             <div class="d-flex fw-wrap mt16 mb96 mx24 sm:ml4 sm:mr4">
-                <a class="s-card m16" href="/admin/projects">项目审核</a>
-                <a class="s-card m16" href="/admin/projects">人员管理</a>
+                <a class="s-card m16" href="/{{ language }}/admin/projects">{{ lang "projects-review" }}</a>
+                <a class="s-card m16" href="/{{ language }}/admin/projects">{{ lang "users-management" }}</a>
             </div>
 
         </main>

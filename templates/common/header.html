@@ -15,10 +15,8 @@
         </a>
 
         <a class="flex--item js-logo" href="/{{ language }}">
-            <span class="fs-title fw-bold">
-                <img class="va-sub" src="/static/imgs/icons/logo-{{ language }}.svg" width="75" height="25"
-                    alt='{{ lang "site-name" }}' title='{{ lang "site-name" }} | {{ lang "site-slogan" }}'
-                    aria-label='{{ lang "site-name" }} | {{ lang "site-slogan" }}'>
+            <span class="fs-subheading fw-bold">
+                {{ lang "site-name" }}
             </span>
         </a>
 
@@ -39,20 +37,6 @@
             aria-label='{{#if (str-cmp language "zh-cn") }}Switch to English{{else}}切换为中文{{/if}}'>
             {{#if (str-cmp language "zh-cn") }}English{{else}}中文{{/if}}
         </a>
-
-        {{!-- <a class="flex--item fc-black-300 ml12 sm:d-none" title='{{ helper-values "i18n" "title" }}'
-            href='{{ helper-values "i18n" "href" }}'>
-            <svg aria-hidden="true" class="svg-icon iconInternational" width="24" height="24" viewBox="0 0 24 24">
-                <path d='{{ helper-values "i18n" "svg" }}' />
-            </svg>
-        </a> --}}
-
-        {{!-- <a class="flex--item fc-black-300 ml12 sm:d-none" title='{{ helper-values "github" "title" }}'
-            href='{{ helper-values "github" "href" }}' target="_blank">
-            <svg aria-hidden="true" class="svg-icon iconGitHub " width="24" height="24" viewBox="0 0 18 18">
-                <path d='{{ helper-values "github" "svg" }}' />
-            </svg>
-        </a> --}}
 
         <a class="d-flex flex__center fc-black-300 ml12 sm:d-block" href="/{{ language }}/projects/project"
             title='{{ lang "random-project" }}' aria-label='{{ lang "random-project" }}' target="_blank">
@@ -94,22 +78,6 @@
                             aria-label='{{#if (str-cmp language "zh-cn") }}Switch to English{{else}}切换为中文{{/if}}'>
                             {{#if (str-cmp language "zh-cn") }}English{{else}}中文{{/if}}
                         </a>
-
-                        {{!-- <a class="flex--item fc-black-300" title='{{ helper-values "i18n" "title" }}'
-                            href='{{ helper-values "i18n" "href" }}'>
-                            <svg aria-hidden="true" class="svg-icon iconInternational" width="24" height="24"
-                                viewBox="0 0 24 24">
-                                <path d='{{ helper-values "i18n" "svg" }}' />
-                            </svg>
-                        </a> --}}
-
-                        {{!-- <a class="flex--item fc-black-300" title='{{ helper-values "github" "title" }}'
-                            href='{{ helper-values "github" "href" }}' target="_blank">
-                            <svg aria-hidden="true" class="svg-icon iconGitHub " width="24" height="24"
-                                viewBox="0 0 18 18">
-                                <path d='{{ helper-values "github" "svg" }}' />
-                            </svg>
-                        </a> --}}
 
                         <div class="flex--item fc-black-300">
                             {{> sign }}

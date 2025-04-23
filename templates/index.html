@@ -4,9 +4,6 @@
     <head>
         <title>{{ lang "site-name" }} | {{ lang "site-slogan" }}</title>
 
-        <meta name="keywords" content='{{ lang "site-name" }},{{ lang "site-slogan" }}'>
-        <meta name="description" content='{{ lang "site-name" }},{{ lang "site-slogan" }},{{ lang "site-intro" }}'>
-
         {{> head }}
     </head>
 
@@ -367,8 +364,7 @@
         <div class="flex--item bg-black-025 p64 sm:pt24 sm:pl24 sm:pr24 sm:pb24">
             <div class="d-grid grid__4 lg:grid__2 sm:grid__1 g16 w100 wmx12 mx-auto">
 
-                <a class="d-flex s-card p16 bs-sm bar-md h:bs-md sm:ai-center" href="/scratch"
-                    target="_blank">
+                <a class="d-flex s-card p16 bs-sm bar-md h:bs-md sm:ai-center" href="/scratch/" target="_blank">
                     <div class="flex--item fc-theme-primary-400 mr16">
                         <svg aria-hidden="true" class="svg-spot spotTheme" width="48" height="48" viewBox="0 0 48 48">
                             <path opacity=".2"
@@ -439,7 +435,7 @@
             {{#if recommended_projects }}
                 <div class="d-flex p12 pt16">
                     <span class="fl-grow1 fs-subheading bg-confetti-animated">
-                        {{ lang "projects-recommended" }}
+                        {{ lang "latest-recommended" }}
                     </span>
                     <a class="pl8 fs-body2 fw-bold" href="/{{ language }}/projects/recommended">
                         {{ lang "more" }}
@@ -449,12 +445,12 @@
                 <div class="d-grid grid__4 lg:grid__2 sm:grid__1 g12 w100 wmx100 mx-auto">
                     {{#each recommended_projects as |project|}}
                         <article class="s-card p16 bg-silver-lighter bs-sm bar-md h:bs-md sm:ai-center">
-                            <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                            <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                 <img class="imgs-list" src="/files/projects/{{ project.coverImage.location }}">
                             </a>
                             <h3 class="fw-bold fs-body3 fc-theme-secondary-400 truncate my2">
                                 <a class="va-baseline s-tag mb4"
-                                    href="/{{ ../language }}/category/{{ project.category.slug }}/projects"
+                                    href="/{{ ../language }}/categories/{{ project.category.slug }}/projects"
                                     target="_blank">
                                     {{#if (str-cmp ../language "zh-cn") }}
                                         {{ project.category.nameZh }}
@@ -462,7 +458,7 @@
                                         {{ project.category.nameEn }}
                                     {{/if}}
                                 </a>
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     {{ project.subject }}
                                 </a>
                             </h3>
@@ -470,7 +466,7 @@
                                 {{#if project.topics }}
                                     {{#each project.topics as |topic|}}
                                         <a class="s-badge s-badge__sm"
-                                            href="/{{ ../../language }}/topic/{{ topic.slug }}/projects"
+                                            href="/{{ ../../language }}/topics/{{ topic.slug }}/projects"
                                             target="_blank">
                                             {{ topic.name }}
                                         </a>
@@ -481,17 +477,17 @@
                                 {{/if}}
                             </p>
                             <p class="fc-medium pl6">
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     <strong>{{ project.hits }}</strong>
                                     {{ lang "project-hits" }}
                                 </a>
                                 <span class="mx4 fc-red-600">/</span>
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     <strong>{{ project.stars }}</strong>
                                     {{ lang "project-stars" }}
                                 </a>
                                 <span class="mx4 fc-red-600">/</span>
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     <strong>{{ project.insides }}</strong>
                                     {{ lang "project-insides" }}
                                 </a>
@@ -511,7 +507,7 @@
             {{#if published_projects }}
                 <div class="d-flex p12 pt16">
                     <span class="fl-grow1 fs-subheading bg-confetti-animated">
-                        {{ lang "projects-published" }}
+                        {{ lang "latest-published" }}
                     </span>
                     <a class="pl8 fs-body2 fw-bold" href="/{{ language }}/projects">
                         {{ lang "more" }}
@@ -521,12 +517,12 @@
                 <div class="d-grid grid__4 lg:grid__2 sm:grid__1 g12 w100 wmx100 mx-auto">
                     {{#each published_projects as |project|}}
                         <article class="s-card p16 bg-silver-lighter bs-sm bar-md h:bs-md sm:ai-center">
-                            <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                            <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                 <img class="imgs-list" src="/files/projects/{{ project.coverImage.location }}">
                             </a>
                             <h3 class="fw-bold fs-body3 fc-theme-secondary-400 truncate my2">
                                 <a class="va-baseline s-tag mb4"
-                                    href="/{{ ../language }}/category/{{ project.category.slug }}/projects"
+                                    href="/{{ ../language }}/categories/{{ project.category.slug }}/projects"
                                     target="_blank">
                                     {{#if (str-cmp ../language "zh-cn") }}
                                         {{ project.category.nameZh }}
@@ -534,7 +530,7 @@
                                         {{ project.category.nameEn }}
                                     {{/if}}
                                 </a>
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     {{ project.subject }}
                                 </a>
                             </h3>
@@ -542,7 +538,7 @@
                                 {{#if project.topics }}
                                     {{#each project.topics as |topic|}}
                                         <a class="s-badge s-badge__sm"
-                                            href="/{{ ../../language }}/topic/{{ topic.slug }}/projects"
+                                            href="/{{ ../../language }}/topics/{{ topic.slug }}/projects"
                                             target="_blank">
                                             {{ topic.name }}
                                         </a>
@@ -553,17 +549,17 @@
                                 {{/if}}
                             </p>
                             <p class="fc-medium pl6">
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     <strong>{{ project.hits }}</strong>
                                     {{ lang "project-hits" }}
                                 </a>
                                 <span class="mx4 fc-red-600">/</span>
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     <strong>{{ project.stars }}</strong>
                                     {{ lang "project-stars" }}
                                 </a>
                                 <span class="mx4 fc-red-600">/</span>
-                                <a href="/{{ ../language }}/project/{{ project.id }}" target="_blank">
+                                <a href="/{{ ../language }}/projects/project-{{ project.id }}" target="_blank">
                                     <strong>{{ project.insides }}</strong>
                                     {{ lang "project-insides" }}
                                 </a>

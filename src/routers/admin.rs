@@ -22,7 +22,10 @@ use crate::models::{
     },
 };
 
-pub async fn admin_index(cookie_jar: CookieJar) -> impl IntoResponse {
+pub async fn admin_index(
+    Path(language): Path<String>,
+    cookie_jar: CookieJar,
+) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
         let mut admin_index_tpl: Hbs =
@@ -43,19 +46,21 @@ pub async fn admin_index(cookie_jar: CookieJar) -> impl IntoResponse {
             .await;
 
         let mut data: BTreeMap<&str, Value> = BTreeMap::new();
-        data.insert("language", json!("zh-cn"));
+        data.insert("language", json!(language));
         data.insert("nav-admin-selected", json!("is-selected"));
         insert_user_by_username(sign_status.username, &mut data)
             .await;
 
         admin_index_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
+        let sign_in_redirect =
+            Redirect::to(format!("/{}/sign-in", language).as_str());
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn projects_admin(
+    Path(language): Path<String>,
     Query(page): Query<Page>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
@@ -81,7 +86,7 @@ pub async fn projects_admin(
             .await;
 
         let mut data: BTreeMap<&str, Value> = BTreeMap::new();
-        data.insert("language", json!("zh-cn"));
+        data.insert("language", json!(language));
         data.insert("nav-admin-selected", json!("is-selected"));
         insert_user_by_username(sign_status.username, &mut data)
             .await;
@@ -111,13 +116,14 @@ pub async fn projects_admin(
 
         admin_projects_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
+        let sign_in_redirect =
+            Redirect::to(format!("/{}/sign-in", language).as_str());
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn project_admin(
-    Path(project_id): Path<String>,
+    Path((language, project_id)): Path<(String, String)>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
@@ -142,7 +148,7 @@ pub async fn project_admin(
             .await;
 
         let mut data: BTreeMap<&str, Value> = BTreeMap::new();
-        data.insert("language", json!("zh-cn"));
+        data.insert("language", json!(language));
         data.insert("nav-admin-selected", json!("is-selected"));
         insert_user_by_username(sign_status.username, &mut data)
             .await;
@@ -186,15 +192,19 @@ pub async fn project_admin(
 
         project_index_tpl.render(&data).await.into_response()
     } else {
-        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
+        let sign_in_redirect =
+            Redirect::to(format!("/{}/sign-in", language).as_str());
         sign_in_redirect.into_response()
     }
 }
 
 pub async fn project_update_one_field(
-    Path(project_id): Path<String>,
-    Path(field_name): Path<String>,
-    Path(field_val): Path<String>,
+    Path((language, project_id, field_name, field_val)): Path<(
+        String,
+        String,
+        String,
+        String,
+    )>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
@@ -217,11 +227,13 @@ pub async fn project_update_one_field(
             .unwrap();
 
         let admin_project_redirect = Redirect::to(
-            format!("/admin/project/{}", project_id).as_str(),
+            format!("/{}/admin/project/{}", language, project_id)
+                .as_str(),
         );
         admin_project_redirect.into_response()
     } else {
-        let sign_in_redirect = Redirect::to("/zh-cn/sign-in");
+        let sign_in_redirect =
+            Redirect::to(format!("/{}/sign-in", language).as_str());
         sign_in_redirect.into_response()
     }
 }

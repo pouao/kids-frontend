@@ -109,8 +109,7 @@ pub async fn projects_index(
 }
 
 pub async fn projects_by_user(
-    Path(language): Path<String>,
-    Path(author_username): Path<String>,
+    Path((language, author_username)): Path<(String, String)>,
     Query(page): Query<Page>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
@@ -449,7 +448,7 @@ pub async fn projects_filter(
     match filter_str.as_str() {
         "recommended" => {
             data.insert(
-                "projects-recommended-selected",
+                "latest-recommended-selected",
                 json!("is-selected"),
             );
 
@@ -482,7 +481,7 @@ pub async fn projects_filter(
 
             filter_desc = json!({
                 "condition": "recommended",
-                "content": "projects-filter-recommended"
+                "content": "recommended"
             });
         }
         _ => {

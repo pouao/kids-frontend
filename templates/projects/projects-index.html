@@ -7,10 +7,6 @@
       {{ lang "projects-list" }} - {{ lang "site-name" }} | {{ lang "site-slogan" }}
     </title>
 
-    <meta name="keywords" content='{{ lang "projects-list" }},{{ lang "site-name" }},{{ lang "site-slogan" }}'>
-    <meta name="description"
-      content='{{ lang "projects-list" }},{{ lang "site-name" }},{{ lang "site-slogan" }},{{ lang "site-intro" }}'>
-
     {{> head }}
   </head>
 
@@ -32,9 +28,9 @@
           <a class="s-btn s-btn__outlined {{ projects-all-selected }}" href="/{{ language }}/projects">
             {{ lang "all" }}
           </a>
-          <a class="s-btn s-btn__outlined {{ projects-recommended-selected }}"
+          <a class="s-btn s-btn__outlined {{ latest-recommended-selected }}"
             href="/{{ language }}/projects/recommended">
-            {{ lang "projects-filter-recommended" }}
+            {{ lang "recommended" }}
           </a>
         </span>
         <button class="s-btn sm:mb4" disabled>-</button>
@@ -52,11 +48,11 @@
         </span>
 
         <span class="flex--item">
-          <a class="s-btn s-btn__filled is-selected" href="http://43.192.48.19:8602" target="_blank">
-            {{ lang "project-online" }}
+          <a class="s-btn s-btn__filled is-selected" href="/scratch/" target="_blank">
+            {{ lang "nav-creating" }}
           </a>
           <a class="s-btn s-btn__filled is-selected" href="/{{ language }}/project/new" target="_blank">
-            {{ lang "project-create" }}
+            {{ lang "project-new" }}
           </a>
           <a class="s-btn s-btn__filled is-selected"
             href="/{{ language }}{{#if user }}/user/{{ user.username }}/projects{{else}}/sign-in{{/if}}"
@@ -107,7 +103,7 @@
                   target="_blank">
                   {{ project_item.user.nickname }}
                 </a>
-                {{ lang "project-posted" }}
+                {{ lang "updated-at" }}
                 {{ project_item.updatedAtNyrsq }}
               </p>
               <p class="pl4 fc-medium">
@@ -127,7 +123,7 @@
                 </a>
                 {{#if (str-cmp project_item.status 2 "gte") }}
                   <span class="ml12 s-tag s-tag__sm s-tag__moderator fw-normal fs-caption">
-                    {{ lang "projects-filter-recommended" }}
+                    {{ lang "recommended" }}
                   </span>
                 {{/if}}
               </p>

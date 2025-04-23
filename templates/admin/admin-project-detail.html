@@ -4,8 +4,7 @@
     <head>
         <title>
             {{ project.subject }} - No.{{ project.id }} -
-            {{#if (str-cmp language "zh-cn") }}{{ project.category.nameZh }}{{else}}{{ project.category.nameEn }}{{/if}}
-            - 项目需求 - 儿童@蔻隼 | 想象、编程、分享
+            {{ lang "projects-review" }} - {{ lang "site-name" }} | {{ lang "site-slogan" }}
         </title>
 
         {{> head }}
@@ -37,28 +36,25 @@
                         </a>
                         <span class="ml8 s-tag s-tag__muted fw-normal fs-body1">{{ project.id }}</span>
                         {{#if (str-cmp project.status -3) }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">已删除</span>
+                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">{{ lang "deleted" }}</span>
                         {{/if}}
                         {{#if (str-cmp project.status -2 "lte") }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">已拒绝</span>
+                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">{{ lang "rejected" }}</span>
                         {{/if}}
                         {{#if (str-cmp project.status -1) }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">草稿</span>
+                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">{{ lang "draft" }}</span>
                         {{/if}}
                         {{#if (str-cmp project.status 0) }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">待审核</span>
+                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">{{ lang "pending" }}</span>
                         {{/if}}
                         {{#if (str-cmp project.status 1 "gte") }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">已审核</span>
+                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">{{ lang "approved" }}</span>
                         {{/if}}
                         {{#if (str-cmp project.status 2 "gte") }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">已推荐</span>
+                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">{{ lang "recommended" }}</span>
                         {{/if}}
                         {{#if (str-cmp project.status 3 "gte") }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">已群发</span>
-                        {{/if}}
-                        {{#if (str-cmp project.status 6) }}
-                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">已管控</span>
+                            <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">{{ lang "massed" }}</span>
                         {{/if}}
                     </h2>
                     <p class="my6 fs-body1">
@@ -66,7 +62,7 @@
                             target="_blank">
                             {{ project.user.nickname }}
                         </a>
-                        {{ lang "project-posted" }}
+                        {{ lang "updated-at" }}
                         {{ project.updatedAtNyrsq }}
                     </p>
                     <p class="my6 pl4 fs-body1">
@@ -141,13 +137,15 @@
 
                     <p class="my16">
                         <a class="p6 s-btn s-btn__md s-btn__danger s-btn__outlined"
-                            href="{{ project.id }}/status/-3"><del>删除</del></a>
+                            href="{{ project.id }}/status/-3"><del>{{ lang "delete" }}</del></a>
                         <a class="p6 s-btn s-btn__md s-btn__muted s-btn__filled"
-                            href="{{ project.id }}/status/-2">审核不通过</a>
-                        <a class="p6 s-btn s-btn__md s-btn__outlined" href="{{ project.id }}/status/1">审核通过并发布</a>
-                        <a class="p6 s-btn s-btn__md s-btn__filled is-selected" href="{{ project.id }}/status/2">推荐</a>
-                        <a class="p6 s-btn s-btn__md s-btn__filled" href="{{ project.id }}/status/3">微信群发</a>
-                        <a class="p6 s-btn s-btn__md s-btn__filled is-selected" href="{{ project.id }}/status/6">管控</a>
+                            href="{{ project.id }}/status/-2">{{ lang "reject" }}</a>
+                        <a class="p6 s-btn s-btn__md s-btn__outlined"
+                            href="{{ project.id }}/status/1">{{ lang "approve" }}</a>
+                        <a class="p6 s-btn s-btn__md s-btn__filled is-selected"
+                            href="{{ project.id }}/status/2">{{ lang "recommend" }}</a>
+                        <a class="p6 s-btn s-btn__md s-btn__filled"
+                            href="{{ project.id }}/status/3">{{ lang "massed" }}</a>
                     </p>
                 </article>
 

@@ -52,7 +52,7 @@ pub async fn push_router() -> Router {
             "/project/{project_id}/{field_name}/{field_val}",
             get(super::routers::admin::project_update_one_field),
         );
-    app_router = app_router.nest("/admin", admin_router);
+    app_router = app_router.nest("/{language}/admin", admin_router);
 
     let users_router = Router::new()
         .route("/", get(super::routers::users::users_index))

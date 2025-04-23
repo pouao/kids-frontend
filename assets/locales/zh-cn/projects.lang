@@ -1,10 +1,7 @@
 projects-list = 项目清单
 my-projects = 我的项目
 
-projects-filter-recommended = 推荐
-
 project-content = 项目内容
-project-posted = 发布于
 project-source-file = 源码文件：
 project-source-file-download-tip = 下载项目源码文件，请 
 project-contact-person = 联系人：

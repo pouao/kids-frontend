@@ -4,10 +4,6 @@
   <head>
     <title>{{ lang "sign-in-intro" }} - {{ lang "site-name" }} | {{ lang "site-slogan" }}</title>
 
-    <meta name="keywords" content='{{ lang "sign-in-intro" }},{{ lang "user-sign-in" }},{{ lang "site-name" }},{{
-      lang "site-slogan" }}'>
-    <meta name="description" content='{{ lang "sign-in-intro" }} - {{ lang "site-intro" }}'>
-
     {{> head }}
   </head>
 
@@ -19,10 +15,7 @@
 
       <div class="ta-center mt16 mb96 mx64">
 
-        <a href="/{{ language }}">
-          <img class="mt32" src="/static/imgs/icons/logo-{{ language }}.svg" width="160" height="53"
-            alt='{{ lang "site-name" }}' title='{{ lang "site-name" }}' aria-label='{{ lang "site-name" }}'>
-        </a>
+        <h1>{{ lang "site-name" }}</h1>
         <h2 class="mt16 mb32">{{ lang "user-sign-in" }}</h2>
 
         {{#if sign_in_failed }}

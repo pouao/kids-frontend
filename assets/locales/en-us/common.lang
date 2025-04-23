@@ -5,32 +5,24 @@ site-intro = Create stories, games, musics, arts, animations, tutorials ... and 
     A gift for my daughter, also hopes to help all kids who enjoy programming.<br>
     Always free, based on Scratch & Rust web stacks.
 
-nav-creating = Start Creating
+nav-creating = Creating(Online Programming)
 nav-creating-tip = Start creating stories, games, musics, arts, animations, tutorials ...
-nav-projects = Explore Projects
+nav-projects = Explore
 nav-projects-tip = Explore shared stories, games, musics, arts, animations, tutorials ...
-nav-tutorials = Tutorials & Videos
+nav-tutorials = Tutorials
 nav-tutorials-tip = Step-by-step tutorials, examples, videos ...
-nav-users = Find Friends
+nav-users = Friends
 nav-users-tip = Find friends, communicate with each other, and learn together
-nav-books = NiQin Books
-nav-jobs = Part-time Jobs
-nav-blog = Blog & News
+nav-books = Books
+nav-jobs = Jobs
+nav-blog = Blog
+nav-admin = Admin
 nav-g = global navigation
 
 switch-theme = Switch Theme
 random = R
 random-project = Random Project
 shared-aphorism = shared an aphorism: 
-
-more = More ...
-projects-recommended = Latest Recommended
-projects-published = Latest Published
-project-hits = Hits
-project-insides = Insides
-project-stars = Stars
-project-online = Online Programming
-project-create = Create new Project
 
 register = Register
 sign-in = Sign in
@@ -46,11 +38,25 @@ projects-center = Projects center
 projects-matching = Projects Matching
 projects-management = Projects Management
 
+project-new = New Project
+project-edit = Edit Project
+project-delete = Delete Project
+project-hits = Hits
+project-insides = Insides
+project-stars = Stars
+
+recommend = Recommend
+recommended = Recommended
+latest-recommended = Latest Recommended
+latest-published = Latest Published
+more = More ...
 all = All
 search = Search
 secret = Secret
 keys-tags = Keys/Tags
 not-setting = Not setting
+created-at = Created At
+updated-at = Updated At
 user-risk-tip = Contact information is provided by user self, the website assumes no responsibility. 
     Please identify the risks by yourself and beware of being deceived.
 

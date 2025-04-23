@@ -8,10 +8,6 @@
             - {{ lang "projects-list" }} - {{ lang "site-name" }} | {{ lang "site-slogan" }}
         </title>
 
-        <meta name="keywords"
-            content='{{#if (str-cmp language "zh-cn") }}{{ project.category.nameZh }}{{else}}{{ project.category.nameEn }}{{/if}},{{#each project.topics as |topic|}}{{ topic.name }}{{#unless @last }},{{/unless}}{{/each}}'>
-        <meta name="description" content="{{ str-cut project.content 100 }}">
-
         {{> head }}
         <link rel="stylesheet" href="/static/css/night-owl.min.css">
     </head>
@@ -48,7 +44,7 @@
                         </a>
                         {{#if (str-cmp project.status 2 "gte") }}
                             <span class="ml8 s-tag s-tag__moderator fw-normal fs-body1">
-                                {{ lang "projects-filter-recommended" }}
+                                {{ lang "recommended" }}
                             </span>
                         {{/if}}
                     </h2>
@@ -57,7 +53,7 @@
                             target="_blank">
                             {{ project.user.nickname }}
                         </a>
-                        {{ lang "project-posted" }}
+                        {{ lang "updated-at" }}
                         {{ project.updatedAtNyrsq }}
                     </p>
                     <p class="my6 pl4 fs-body1">

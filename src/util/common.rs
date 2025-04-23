@@ -72,14 +72,21 @@ pub fn get_lang_msg(
 
 fn get_lang_res(root_tpl: &str) -> Vec<&str> {
     match root_tpl {
-        "index" | "register" | "sign-in" | "admin_admin-index" => {
+        "index" | "register" | "sign-in" => {
             vec!["common.lang", "home.lang"]
+        }
+        "admin_admin-index"
+        | "admin_admin-projects"
+        | "admin_admin-project-detail" => {
+            vec![
+                "common.lang",
+                "pagination.lang",
+                "admin.lang",
+            ]
         }
         "projects_projects-index"
         | "projects_projects-project-detail"
-        | "projects_projects-project-new"
-        | "admin_admin-projects"
-        | "admin_admin-project-detail" => {
+        | "projects_projects-project-new" => {
             vec![
                 "common.lang",
                 "pagination.lang",

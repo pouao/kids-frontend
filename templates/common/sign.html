@@ -3,10 +3,6 @@
     <button class="s-btn s-btn__dropdown" role="button" aria-controls="user-dashboard" data-controller="s-popover"
         data-action="s-popover#toggle" data-s-popover-placement="bottom-start"
         data-s-popover-toggle-class="is-selected">
-        <div class="s-avatar s-avatar__32 va-middle">
-            <span class="s-avatar--letter fc-orange-600">{{ str-cut user.nickname 1 }}</span>
-            <img src="/static/imgs/svgs/ShieldXSm.svg" class="native s-avatar--badge">
-        </div>
         <span class="fw-bold ff-sans fs-body2 va-middle">{{ user.nickname }}</span>
     </button>
 {{else}}

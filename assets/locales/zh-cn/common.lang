@@ -5,32 +5,24 @@ site-intro = 创建故事、游戏、音乐、艺术、动画、教程……并�
     给女儿的礼物，也希望可以帮助所有喜爱编程的孩童。<br>
     永远免费，基于 Scratch 和 Rust web 技术栈构建。
 
-nav-creating = 开始创建
+nav-creating = 创建(在线编程)
 nav-creating-tip = 开始创建故事、游戏、音乐、艺术、动画、教程……
-nav-projects = 探索项目
+nav-projects = 探索
 nav-projects-tip = 探索已分享的故事、游戏、音乐、艺术、动画、教程……
-nav-tutorials = 教程视频
+nav-tutorials = 教程
 nav-tutorials-tip = 循序渐进的教程、实例、视频……
-nav-users = 找朋友
+nav-users = 朋友
 nav-users-tip = 找朋友，相互交流、共同学习
-nav-books = 泥芹书馆
-nav-jobs = 兼职工作
-nav-blog = 博客资讯
+nav-books = 书馆
+nav-jobs = 工作
+nav-blog = 博客
+nav-admin = 管理
 nav-g = 全局导航
 
 switch-theme = 切换色彩模式
 random = 逛
 random-project = 试试手气
 shared-aphorism = 分享格言：
-
-more = 更多 ……
-projects-recommended = 最新推荐
-projects-published = 最新发布
-project-hits = 点击
-project-insides = 进入
-project-stars = 星星
-project-online = 在线编程
-project-create = 创建新项目
 
 register = 注册
 sign-in = 签入
@@ -46,11 +38,25 @@ projects-center = 项目中心
 projects-matching = 项目匹配
 projects-management = 项目管理
 
+project-new = 新项目
+project-edit = 编辑项目
+project-delete = 删除项目
+project-hits = 点击
+project-insides = 进入
+project-stars = 星星
+
+recommend = 推荐
+recommended = 已推荐
+latest-recommended = 最新推荐
+latest-published = 最新发布
+more = 更多 ……
 all = 全部
 search = 查询
 secret = 保密
 keys-tags = 关键词/标签
 not-setting = 未设定
+created-at = 创建于
+updated-at = 更新于
 user-risk-tip = 联系方式由用户自己提供，本网站不负任何法律责任。
     请自行甄别风险，谨防上当受骗。
     
