@@ -12,8 +12,8 @@ sign-in-create-account = Create an account
 
 sign-in-incorrect = Username or email is incorrect
 sign-in-not-activation = Your KouSun account has not been activated, please check the activation email
-sign-in-banned = This account has been banned, please contact the service assistant (ask@kousun.com)
-sign-in-security-problem = Security problems with this account, please contact the service assistant (ask@kousun.com)
+sign-in-banned = This account has been banned, please contact the service assistant (ask@bipou.com)
+sign-in-security-problem = Security problems with this account, please contact the service assistant (ask@bipou.com)
 sign-in-not-registration = This account has not been registered
 
 user-register = User Register
@@ -51,13 +51,13 @@ register-result = <span class="fw-bold fc-blue-600">{ $nickname }</span>, Congra
     Please sign in your email, and check the activation email from KouSun, then to activate your account.
     <br><br>
     If you didn't receive the activation email from KouSun, please
-    <a href="mailto:ask@kousun.com">contact the service assistant (ask@kousun.com)</a>
+    <a href="mailto:ask@bipou.com">contact the service assistant (ask@bipou.com)</a>
 register-failed-username-email-exists = Username or Email is exists
 
-email-subject = { $nickname } ({ $username }), account activation email from kids@KouSun
+email-subject = { $nickname } ({ $username }), account activation email from kids@RoboMaker
 email-body = Hi, { $nickname } ({ $username })! 
     <br><br>
-    This email sent from kids@KouSun, it is activation email for your account.
+    This email sent from kids@RoboMaker, it is activation email for your account.
     <br><br>
     Please visit URL: https://{ $domain }/{ $language }/user/{ $user_id }/activate to activate your account.
     <br><br>
@@ -65,4 +65,4 @@ email-body = Hi, { $nickname } ({ $username })!
     <br><br>
     Please do not reply, thank you!
     <br><br>
-    kids@KouSun - https://kids.KouSun.com
+    kids@RoboMaker - https://kids.bipou.com

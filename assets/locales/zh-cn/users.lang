@@ -34,6 +34,6 @@ user-re-activate-result = <span class="fw-bold fc-blue-600">{ $nickname }</span>
     <br><br>
     请登录你的邮箱，查阅蔻隼智能账户激活邮件，并激活账户。
 user-activate-problem = 若有问题咨询，请
-    <a href="mailto:ask@kousun.com">联系蔻隼智能服务专员（ask@kousun.com）
+    <a href="mailto:ask@bipou.com">联系蔻隼智能服务专员（ask@bipou.com）
 
-users-list-tip = 仅列出已激活的账户。若有问题，请联系 ask@kousun.com。
+users-list-tip = 仅列出已激活的账户。若有问题，请联系 ask@bipou.com。

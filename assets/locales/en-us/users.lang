@@ -34,6 +34,6 @@ user-re-activate-result = <span class="fw-bold fc-blue-600">{ $nickname }</span>
     <br><br>
     Please log into your mailbox and check the activation email of KouSun, then activate your account.
 user-activate-problem = If you have any problem, please
-    <a href="mailto:ask@kousun.com">contact the service assistant (ask@kousun.com)</a>
+    <a href="mailto:ask@bipou.com">contact the service assistant (ask@bipou.com)</a>
 
-users-list-tip = Only activated accounts are listed. If there is any problem, please contact ask@kousun.com.
+users-list-tip = Only activated accounts are listed. If there is any problem, please contact ask@bipou.com.

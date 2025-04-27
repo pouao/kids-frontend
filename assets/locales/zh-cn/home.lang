@@ -12,8 +12,8 @@ sign-in-create-account = 创建账户
 
 sign-in-incorrect = 账户或密码错误
 sign-in-not-activation = 此蔻隼账户尚未激活，请查阅激活邮件
-sign-in-banned = 此账户已被封禁，请联系蔻隼服务专员（ask@kousun.com）
-sign-in-security-problem = 此账户安全有异，请联系蔻隼服务专员（ask@kousun.com）
+sign-in-banned = 此账户已被封禁，请联系蔻隼服务专员（ask@bipou.com）
+sign-in-security-problem = 此账户安全有异，请联系蔻隼服务专员（ask@bipou.com）
 sign-in-not-registration = 此账户尚未注册
 
 user-register = 用户注册
@@ -51,7 +51,7 @@ register-result = <span class="fw-bold fc-blue-600">{ $nickname }</span>，祝�
     请登录你的邮箱，查阅蔻隼智能账户激活邮件，并激活账户。
     <br><br>
     若未收到激活邮件，或电子邮件填写错误，请 
-    <a href="mailto:ask@kousun.com">联系蔻隼智能服务专员（ask@kousun.com）</a>
+    <a href="mailto:ask@bipou.com">联系蔻隼智能服务专员（ask@bipou.com）</a>
 register-failed-username-email-exists = 电子邮件或用户名已注册
 
 email-subject = { $nickname }（{ $username }），来自儿童@蔻隼的账户激活邮件
@@ -65,4 +65,4 @@ email-body = 你好，{ $nickname }（{ $username }）！
     <br><br>
     请勿回复，谢谢！
     <br><br>
-    儿童@蔻隼 - https://kids.KouSun.com 
+    儿童@机器人创客 - https://kids.bipou.com 

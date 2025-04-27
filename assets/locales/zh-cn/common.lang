@@ -26,13 +26,15 @@ shared-aphorism = 分享格言：
 
 register = 注册
 sign-in = 签入
-sign-in-intro = 签入儿童@蔻隼
+sign-in-intro = 签入儿童@机器人创客
 sign-out = 签出
 
 user-profile = 用户资料
 user-general = 基本信息
 user-contact = 联系方式
 user-finance = 财务中心
+user-risk-tip = 联系方式由用户自己提供，本网站不负任何法律责任。
+    请自行甄别风险，谨防上当受骗。
 
 projects-center = 项目中心
 projects-matching = 项目匹配
@@ -45,8 +47,6 @@ project-hits = 点击
 project-insides = 进入
 project-stars = 星星
 
-recommend = 推荐
-recommended = 已推荐
 latest-recommended = 最新推荐
 latest-published = 最新发布
 more = 更多 ……
@@ -57,10 +57,8 @@ keys-tags = 关键词/标签
 not-setting = 未设定
 created-at = 创建于
 updated-at = 更新于
-user-risk-tip = 联系方式由用户自己提供，本网站不负任何法律责任。
-    请自行甄别风险，谨防上当受骗。
     
 based-on = 基于 
-    <a href="https://github.com/rusthub-org/kids.kousun.com" target="_blank">kousun-ai/kids.kousun.com</a>
+    <a href="https://github.com/rusthub-org/kids.bipou.com" target="_blank">kousun-ai/kids.bipou.com</a>
     定制
 copyright = 版权所有

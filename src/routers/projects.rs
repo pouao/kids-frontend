@@ -211,8 +211,7 @@ pub async fn projects_by_user(
 }
 
 pub async fn projects_by_category(
-    Path(language): Path<String>,
-    Path(category_slug): Path<String>,
+    Path((language, category_slug)): Path<(String, String)>,
     Query(page): Query<Page>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
@@ -273,10 +272,10 @@ pub async fn projects_by_category(
     data.insert(
         "filter_desc",
         json!({
-            "condition": category["nameEn"].as_str().unwrap(),
+            "condition": category["nameEn"],
             "content": match language.as_str() {
-                "zh-cn" => category["nameZh"].as_str().unwrap(),
-                _ => category["nameEn"].as_str().unwrap(),
+                "zh-cn" => category["nameZh"].clone(),
+                _ => category["nameEn"].clone(),
             }
         }),
     );
@@ -314,8 +313,7 @@ pub async fn projects_by_category(
 }
 
 pub async fn projects_by_topic(
-    Path(language): Path<String>,
-    Path(topic_slug): Path<String>,
+    Path((language, topic_slug)): Path<(String, String)>,
     Query(page): Query<Page>,
     cookie_jar: CookieJar,
 ) -> impl IntoResponse {
@@ -373,7 +371,7 @@ pub async fn projects_by_topic(
         "filter_desc",
         json!({
             "condition": "topic",
-            "content": topic["name"].as_str().unwrap()
+            "content": topic["name"]
         }),
     );
 
@@ -480,7 +478,7 @@ pub async fn projects_filter(
             data.insert("pagination", projects_recommended);
 
             filter_desc = json!({
-                "condition": "recommended",
+                "condition": "filter",
                 "content": "recommended"
             });
         }

@@ -1,17 +1,6 @@
 projects-list = Projects List
 my-projects = My Projects
 
-project-content = Project Content
-project-source-file = Source File: 
-project-source-file-download-tip = To download project source file, please 
-project-contact-person = Contact person: 
-project-contact-phone = Phone: 
-project-contact-im = IM tools: 
-project-contact-email = Email: 
-project-view-contact = To view contact details of project, please 
-project-risk-tip = All rights of each project belong to the author, the website assumes no responsibility. 
-    If there is anything improper, please contact ask@kousun.com.
-
 project-new-category = Category
 project-category-select = Please select project category
 project-new-subject = Subject

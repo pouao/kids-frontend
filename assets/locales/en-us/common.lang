@@ -33,6 +33,8 @@ user-profile = Your profile
 user-general = General information
 user-contact = Contact information
 user-finance = Finance center
+user-risk-tip = Contact information is provided by user self, the website assumes no responsibility. 
+    Please identify the risks by yourself and beware of being deceived.
 
 projects-center = Projects center
 projects-matching = Projects Matching
@@ -45,8 +47,6 @@ project-hits = Hits
 project-insides = Insides
 project-stars = Stars
 
-recommend = Recommend
-recommended = Recommended
 latest-recommended = Latest Recommended
 latest-published = Latest Published
 more = More ...
@@ -57,10 +57,8 @@ keys-tags = Keys/Tags
 not-setting = Not setting
 created-at = Created At
 updated-at = Updated At
-user-risk-tip = Contact information is provided by user self, the website assumes no responsibility. 
-    Please identify the risks by yourself and beware of being deceived.
 
 based-on = Based on 
-    <a href="https://github.com/rusthub-org/kids.kousun.com" target="_blank">kousun-ai/kids.kousun.com</a>
+    <a href="https://github.com/rusthub-org/kids.bipou.com" target="_blank">kousun-ai/kids.bipou.com</a>
     to Develop
 copyright = All Rights Reserved

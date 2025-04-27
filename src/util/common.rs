@@ -80,8 +80,10 @@ fn get_lang_res(root_tpl: &str) -> Vec<&str> {
         | "admin_admin-project-detail" => {
             vec![
                 "common.lang",
+                "ops.lang",
                 "pagination.lang",
                 "admin.lang",
+                "project.lang",
             ]
         }
         "projects_projects-index"
@@ -89,8 +91,10 @@ fn get_lang_res(root_tpl: &str) -> Vec<&str> {
         | "projects_projects-project-new" => {
             vec![
                 "common.lang",
+                "ops.lang",
                 "pagination.lang",
                 "projects.lang",
+                "project.lang",
             ]
         }
         "users_users-index"

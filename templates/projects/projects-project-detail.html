@@ -30,7 +30,7 @@
                 <span class="ml8 fc-danger fs-fine">{{ lang "project-risk-tip" }}</span>
                 <article class="s-card my12">
                     <h2 class="mb6">
-                        <a class="s-tag mr6" href="/{{ language }}/category/{{ project.category.slug }}/projects"
+                        <a class="s-tag mr6" href="/{{ language }}/categories/{{ project.category.slug }}/projects"
                             target="_blank">
                             {{#if (str-cmp language "zh-cn") }}
                                 {{ project.category.nameZh }}
@@ -38,7 +38,7 @@
                                 {{ project.category.nameEn }}
                             {{/if}}
                         </a>
-                        <a href="/{{ language }}/project/{{ project.id }}" target="_blank">
+                        <a href="/{{ language }}/projects/project-{{ project.id }}" target="_blank">
                             {{ project.subject }}
                             <sup class="fw-normal fs-fine">No.{{ project.id }}</sup>
                         </a>
@@ -49,7 +49,7 @@
                         {{/if}}
                     </h2>
                     <p class="my6 fs-body1">
-                        <a class="s-link fw-bold" href="/{{ language }}/user/{{ project.user.username }}"
+                        <a class="s-link fw-bold" href="/{{ language }}/users/{{ project.user.username }}"
                             target="_blank">
                             {{ project.user.nickname }}
                         </a>
@@ -57,17 +57,17 @@
                         {{ project.updatedAtNyrsq }}
                     </p>
                     <p class="my6 pl4 fs-body1">
-                        <a href="/{{ language }}/project/{{ project.id }}" target="_blank">
+                        <a href="/{{ language }}/projects/project-{{ project.id }}" target="_blank">
                             <strong>{{ project.hits }}</strong>
                             {{ lang "project-hits" }}
                         </a>
                         <span class="mx4 fc-red-600">/</span>
-                        <a href="/{{ language }}/project/{{ project.id }}" target="_blank">
+                        <a href="/{{ language }}/projects/project-{{ project.id }}" target="_blank">
                             <strong>{{ project.stars }}</strong>
                             {{ lang "project-stars" }}
                         </a>
                         <span class="mx4 fc-red-600">/</span>
-                        <a href="/{{ language }}/project/{{ project.id }}" target="_blank">
+                        <a href="/{{ language }}/projects/project-{{ project.id }}" target="_blank">
                             <strong>{{ project.insides }}</strong>
                             {{ lang "project-insides" }}
                         </a>
@@ -82,7 +82,7 @@
                         {{#if project.topics }}
                             {{#each project.topics as |topic|}}
                                 <a class="s-badge ml4 mb2 fs-body1"
-                                    href="/{{ ../language }}/topic/{{ topic.slug }}/projects" target="_blank">
+                                    href="/{{ ../language }}/topics/{{ topic.slug }}/projects" target="_blank">
                                     {{ topic.name }}
                                 </a>
                             {{/each}}
