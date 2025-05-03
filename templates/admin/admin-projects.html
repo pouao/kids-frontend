@@ -23,7 +23,7 @@
         <div class="d-grid grid__4 lg:grid__2 sm:grid__1 g12 w100 wmx100 mx-auto">
           {{#each pagination.currentItems as |project_item|}}
             <article class="s-card my8 p4">
-              <a href="/{{ ../language }}/admin/project/{{ project_item.id }}" target="_blank">
+              <a href="/{{ ../language }}/admin/project-{{ project_item.id }}" target="_blank">
                 <img class="imgs-list" src="/files/projects/{{ project_item.coverImage.location }}">
               </a>
               <h3 class="fw-bold fs-body3 fc-theme-secondary-400 my2">
@@ -32,7 +32,7 @@
                   {{ project_item.category.nameZh }}
                   {{ project_item.category.nameEn }}
                 </a>
-                <a href="/{{ ../language }}/admin/project/{{ project_item.id }}" target="_blank">
+                <a href="/{{ ../language }}/admin/project-{{ project_item.id }}" target="_blank">
                   {{ project_item.subject }}
                 </a>
                 <span class="ml8 s-tag s-tag__muted fw-normal fs-body1">{{ project_item.id }}</span>

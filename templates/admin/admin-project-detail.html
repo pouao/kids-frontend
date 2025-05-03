@@ -31,7 +31,7 @@
                             {{ project.category.nameZh }}
                             ({{ project.category.nameEn }})
                         </a>
-                        <a href="/admin/project/{{ project.id }}" target="_blank">
+                        <a href="/{{ language }}/admin/project-{{ project.id }}" target="_blank">
                             {{ project.subject }}
                         </a>
                         <span class="ml8 s-tag s-tag__muted fw-normal fs-body1">{{ project.id }}</span>
@@ -137,15 +137,15 @@
 
                     <p class="my16">
                         <a class="p6 s-btn s-btn__md s-btn__danger s-btn__outlined"
-                            href="{{ project.id }}/status/-3"><del>{{ lang "delete" }}</del></a>
+                            href="project-{{ project.id }}/status/-3"><del>{{ lang "delete" }}</del></a>
                         <a class="p6 s-btn s-btn__md s-btn__muted s-btn__filled"
-                            href="{{ project.id }}/status/-2">{{ lang "reject" }}</a>
+                            href="project-{{ project.id }}/status/-2">{{ lang "reject" }}</a>
                         <a class="p6 s-btn s-btn__md s-btn__outlined"
-                            href="{{ project.id }}/status/1">{{ lang "approve" }}</a>
+                            href="project-{{ project.id }}/status/1">{{ lang "approve" }}</a>
                         <a class="p6 s-btn s-btn__md s-btn__filled is-selected"
-                            href="{{ project.id }}/status/2">{{ lang "recommend" }}</a>
+                            href="project-{{ project.id }}/status/2">{{ lang "recommend" }}</a>
                         <a class="p6 s-btn s-btn__md s-btn__filled"
-                            href="{{ project.id }}/status/3">{{ lang "mass" }}</a>
+                            href="project-{{ project.id }}/status/3">{{ lang "mass" }}</a>
                     </p>
                 </article>
 

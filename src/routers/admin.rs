@@ -227,7 +227,7 @@ pub async fn project_update_one_field(
             .unwrap();
 
         let admin_project_redirect = Redirect::to(
-            format!("/{}/admin/project/{}", language, project_id)
+            format!("/{}/admin/project-{}", language, project_id)
                 .as_str(),
         );
         admin_project_redirect.into_response()

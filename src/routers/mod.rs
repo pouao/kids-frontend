@@ -12,15 +12,15 @@ use axum::{
 };
 use tower_http::services::{ServeDir, ServeFile};
 
-pub struct AppState {}
+struct AppState {}
 
 pub async fn push_router() -> Router {
     let app_state = Arc::new(AppState {});
     let mut app_router = Router::new()
         .with_state(app_state)
-        .route("/", get(super::routers::home::init))
         .nest_service("/static", ServeDir::new("static"))
         .nest_service("/files", ServeDir::new("files"))
+        .route("/", get(super::routers::home::init))
         .route_service("/ads.txt", ServeFile::new("static/ads.txt"));
 
     let home_router = Router::new()
@@ -45,11 +45,11 @@ pub async fn push_router() -> Router {
             get(super::routers::admin::projects_admin),
         )
         .route(
-            "/project/{project_id}",
+            "/project-{project_id}",
             get(super::routers::admin::project_admin),
         )
         .route(
-            "/project/{project_id}/{field_name}/{field_val}",
+            "/project-{project_id}/{field_name}/{field_val}",
             get(super::routers::admin::project_update_one_field),
         );
     app_router = app_router.nest("/{language}/admin", admin_router);
