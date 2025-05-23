@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use graphql_client::{GraphQLQuery, Response as GqlResponse};
+use graphql_client::GraphQLQuery;
 use serde_json::{json, Value};
 use axum::{
     http::HeaderMap,
@@ -9,7 +9,7 @@ use axum::{
 use axum_extra::extract::cookie::{Cookie, CookieJar};
 
 use crate::util::{
-    constant::CFG, common::gql_post, tpl::Hbs,
+    constant::CFG, common::gql_resp, tpl::Hbs,
     tpl_data::insert_wish_random, email::send_email,
 };
 use crate::models::{
@@ -67,21 +67,12 @@ async fn init_index<'ii>(
     insert_wish_random(&mut data).await;
 
     // insert home data
-    let home_build_query =
-        HomeData::build_query(home_data::Variables {
+    let home_query_json =
+        json!(HomeData::build_query(home_data::Variables {
             username: "-".to_string(),
-        });
-    let home_query_json = json!(home_build_query);
-
-    let home_resp_head = gql_post()
-        .await
-        .json(&home_query_json)
-        .send()
-        .await
-        .unwrap();
-    let home_resp_body: GqlResponse<Value> =
-        home_resp_head.json().await.unwrap();
-    let home_resp_data = home_resp_body.data.expect("无响应数据");
+        }));
+    let home_resp_data =
+        gql_resp(&home_query_json, true).await.expect("无响应数据");
 
     // let managed_projects = home_resp_data["managedProjects"].clone();
     // data.insert("managed_projects", managed_projects);
@@ -149,8 +140,8 @@ pub async fn register_submit(
     data.insert("register-nav-selected", json!("is-selected"));
     insert_wish_random(&mut data).await;
 
-    let register_build_query =
-        RegisterData::build_query(register_data::Variables {
+    let register_query_json =
+        json!(RegisterData::build_query(register_data::Variables {
             username: register_info.username.clone(),
             email: register_info.email.clone(),
             cred: register_info.password,
@@ -161,60 +152,37 @@ pub async fn register_submit(
             im_public: register_info.im_public,
             website: register_info.website,
             introduction: register_info.introduction,
-        });
-    let register_query_json = json!(register_build_query);
-
-    let register_resp_head = gql_post()
-        .await
-        .json(&register_query_json)
-        .send()
-        .await
-        .unwrap();
-    let register_resp_body: GqlResponse<Value> =
-        register_resp_head.json().await.unwrap();
-    let register_resp_data = register_resp_body.data;
+        }));
+    let register_resp_data =
+        gql_resp(&register_query_json, true).await;
 
     if let Some(register_val) = register_resp_data {
         let register_result = register_val["userRegister"].clone();
         let user_id = register_result["id"].as_str().unwrap();
 
         // create topics
-        let topics_build_query =
-            TopicsNewData::build_query(topics_new_data::Variables {
+        let topics_query_json = json!(TopicsNewData::build_query(
+            topics_new_data::Variables {
                 topic_names: register_info.topic_names,
-            });
-        let topics_query_json = json!(topics_build_query);
-
-        let topics_resp_head = gql_post()
-            .await
-            .json(&topics_query_json)
-            .send()
-            .await
-            .unwrap();
-        let topics_resp_body: GqlResponse<Value> =
-            topics_resp_head.json().await.unwrap();
-        let topics_resp_data = topics_resp_body.data;
+            }
+        ));
+        let topics_resp_data =
+            gql_resp(&topics_query_json, true).await;
 
         if let Some(topics_info) = topics_resp_data {
             let topic_ids =
                 topics_info["topicsNew"].as_array().unwrap();
             for topic_id in topic_ids {
                 let topic_id = topic_id["id"].as_str().unwrap();
-                let topic_user_build_query =
-                    TopicUserNewData::build_query(
+                let topic_user_query_json =
+                    json!(TopicUserNewData::build_query(
                         topic_user_new_data::Variables {
                             user_id: user_id.to_string(),
                             topic_id: topic_id.to_string(),
                         },
-                    );
-                let topic_user_query_json =
-                    json!(topic_user_build_query);
-                let _topic_user_resp_head = gql_post()
-                    .await
-                    .json(&topic_user_query_json)
-                    .send()
-                    .await
-                    .unwrap();
+                    ));
+                let _topic_user_resp_head =
+                    gql_resp(&topic_user_query_json, false).await;
             }
         }
 
@@ -229,10 +197,7 @@ pub async fn register_submit(
 
         data.insert("register_result", register_result);
     } else {
-        data.insert(
-            "register_failed",
-            json!(register_resp_body.errors.unwrap()[0].message),
-        );
+        data.insert("register_failed", json!("register_failed"));
     }
 
     register_tpl.render(&data).await
@@ -291,22 +256,12 @@ pub async fn sign_in_submit(
     data.insert("sign-in-nav-selected", json!("is-selected"));
     insert_wish_random(&mut data).await;
 
-    let sign_in_build_query =
-        SignInData::build_query(sign_in_data::Variables {
+    let sign_in_query_json =
+        json!(SignInData::build_query(sign_in_data::Variables {
             signature: sign_in_info.signature,
             password: sign_in_info.password,
-        });
-    let sign_in_query_json = json!(sign_in_build_query);
-
-    let sign_in_resp_head = gql_post()
-        .await
-        .json(&sign_in_query_json)
-        .send()
-        .await
-        .unwrap();
-    let sign_in_resp_body: GqlResponse<Value> =
-        sign_in_resp_head.json().await.unwrap();
-    let sign_in_resp_data = sign_in_resp_body.data;
+        }));
+    let sign_in_resp_data = gql_resp(&sign_in_query_json, true).await;
 
     if let Some(sign_in_val) = sign_in_resp_data {
         let sign_in_user = sign_in_val["userSignIn"].clone();
@@ -329,17 +284,7 @@ pub async fn sign_in_submit(
             Redirect::to(format!("/{}/projects", language).as_str());
         (cookie_jar, projects_redirect).into_response()
     } else {
-        let error = sign_in_resp_body.errors.unwrap()[0].clone();
-        data.insert("sign_in_failed", json!(error.message));
-
-        if let Some(eev) = error.extensions {
-            let sign_in_failed_user_id =
-                eev.get("user_id").unwrap().as_str().unwrap();
-            data.insert(
-                "sign_in_failed_user_id",
-                json!(sign_in_failed_user_id),
-            );
-        }
+        data.insert("sign_in_failed", json!("sign_in_failed"));
 
         sign_in_tpl.render(&data).await.into_response()
     }

@@ -2,7 +2,7 @@ use std::{
     collections::BTreeMap,
     time::{SystemTime, UNIX_EPOCH},
 };
-use graphql_client::{GraphQLQuery, Response as GqlResponse};
+use graphql_client::GraphQLQuery;
 use axum::{
     Json,
     response::{IntoResponse, Redirect},
@@ -13,7 +13,7 @@ use serde_json::{json, Value};
 use percent_encoding::percent_decode;
 
 use crate::util::{
-    common::gql_post,
+    common::gql_resp,
     common::sign_status,
     tpl::Hbs,
     tpl_data::{
@@ -81,25 +81,16 @@ pub async fn projects_index(
     }
     insert_categories(&mut data).await;
 
-    let projects_build_query =
-        ProjectsData::build_query(projects_data::Variables {
+    let projects_query_json =
+        json!(ProjectsData::build_query(projects_data::Variables {
             from_page: page.from,
             first_oid: page.first,
             last_oid: page.last,
             status: 1,
-        });
-    let projects_query_json = json!(projects_build_query);
-
-    let projects_resp_head = gql_post()
+        }));
+    let projects_resp_data = gql_resp(&projects_query_json, true)
         .await
-        .json(&projects_query_json)
-        .send()
-        .await
-        .unwrap();
-    let projects_resp_body: GqlResponse<Value> =
-        projects_resp_head.json().await.unwrap();
-    let projects_resp_data =
-        projects_resp_body.data.expect("无响应数据");
+        .expect("无响应数据");
 
     let projects = projects_resp_data["projects"].clone();
     data.insert("pagination", projects);
@@ -143,25 +134,16 @@ pub async fn projects_by_user(
     }
     insert_categories(&mut data).await;
 
-    let author_by_username_build_query =
-        UserByUsernameData::build_query(
+    let author_by_username_query_json =
+        json!(UserByUsernameData::build_query(
             user_by_username_data::Variables {
                 username: author_username.clone(),
             },
-        );
-    let author_by_username_query_json =
-        json!(author_by_username_build_query);
-
-    let author_by_username_resp_head = gql_post()
-        .await
-        .json(&author_by_username_query_json)
-        .send()
-        .await
-        .unwrap();
-    let author_by_username_resp_body: GqlResponse<Value> =
-        author_by_username_resp_head.json().await.unwrap();
+        ));
     let author_by_username_resp_data =
-        author_by_username_resp_body.data.expect("无响应数据");
+        gql_resp(&author_by_username_query_json, true)
+            .await
+            .expect("无响应数据");
 
     let author =
         author_by_username_resp_data["userByUsername"].clone();
@@ -178,8 +160,8 @@ pub async fn projects_by_user(
         }),
     );
 
-    let projects_by_user_build_query =
-        ProjectsByUserData::build_query(
+    let projects_by_user_query_json =
+        json!(ProjectsByUserData::build_query(
             projects_by_user_data::Variables {
                 username: author_username,
                 from_page: page.from,
@@ -187,20 +169,11 @@ pub async fn projects_by_user(
                 last_oid: page.last,
                 status: 1,
             },
-        );
-    let projects_by_user_query_json =
-        json!(projects_by_user_build_query);
-
-    let projects_by_user_resp_head = gql_post()
-        .await
-        .json(&projects_by_user_query_json)
-        .send()
-        .await
-        .unwrap();
-    let projects_by_user_resp_body: GqlResponse<Value> =
-        projects_by_user_resp_head.json().await.unwrap();
+        ));
     let projects_by_user_resp_data =
-        projects_by_user_resp_body.data.expect("无响应数据");
+        gql_resp(&projects_by_user_query_json, true)
+            .await
+            .expect("无响应数据");
 
     let projects_by_user =
         projects_by_user_resp_data["projectsByUsername"].clone();
@@ -246,25 +219,16 @@ pub async fn projects_by_category(
     }
     insert_categories(&mut data).await;
 
-    let category_by_slug_build_query =
-        CategoryBySlugData::build_query(
+    let category_by_slug_query_json =
+        json!(CategoryBySlugData::build_query(
             category_by_slug_data::Variables {
                 slug: category_slug.clone(),
             },
-        );
-    let category_by_slug_query_json =
-        json!(category_by_slug_build_query);
-
-    let category_by_slug_resp_head = gql_post()
-        .await
-        .json(&category_by_slug_query_json)
-        .send()
-        .await
-        .unwrap();
-    let category_by_slug_resp_body: GqlResponse<Value> =
-        category_by_slug_resp_head.json().await.unwrap();
+        ));
     let category_by_slug_resp_data =
-        category_by_slug_resp_body.data.expect("无响应数据");
+        gql_resp(&category_by_slug_query_json, true)
+            .await
+            .expect("无响应数据");
 
     let category =
         category_by_slug_resp_data["categoryBySlug"].clone();
@@ -279,8 +243,8 @@ pub async fn projects_by_category(
         }),
     );
 
-    let projects_by_category_build_query =
-        ProjectsByCategoryData::build_query(
+    let projects_by_category_query_json =
+        json!(ProjectsByCategoryData::build_query(
             projects_by_category_data::Variables {
                 category_slug: category_slug,
                 from_page: page.from,
@@ -288,20 +252,11 @@ pub async fn projects_by_category(
                 last_oid: page.last,
                 status: 1,
             },
-        );
-    let projects_by_category_query_json =
-        json!(projects_by_category_build_query);
-
-    let projects_by_category_resp_head = gql_post()
-        .await
-        .json(&projects_by_category_query_json)
-        .send()
-        .await
-        .unwrap();
-    let projects_by_category_resp_body: GqlResponse<Value> =
-        projects_by_category_resp_head.json().await.unwrap();
+        ));
     let projects_by_category_resp_data =
-        projects_by_category_resp_body.data.expect("无响应数据");
+        gql_resp(&projects_by_category_query_json, true)
+            .await
+            .expect("无响应数据");
 
     let projects_by_category =
         projects_by_category_resp_data["projectsByCategorySlug"]
@@ -348,22 +303,15 @@ pub async fn projects_by_topic(
     }
     insert_categories(&mut data).await;
 
-    let topic_by_slug_build_query =
+    let topic_by_slug_query_json = json!(
         TopicBySlugData::build_query(topic_by_slug_data::Variables {
             slug: topic_slug.clone(),
-        });
-    let topic_by_slug_query_json = json!(topic_by_slug_build_query);
-
-    let topic_by_slug_resp_head = gql_post()
-        .await
-        .json(&topic_by_slug_query_json)
-        .send()
-        .await
-        .unwrap();
-    let topic_by_slug_resp_body: GqlResponse<Value> =
-        topic_by_slug_resp_head.json().await.unwrap();
+        })
+    );
     let topic_by_slug_resp_data =
-        topic_by_slug_resp_body.data.expect("无响应数据");
+        gql_resp(&topic_by_slug_query_json, true)
+            .await
+            .expect("无响应数据");
 
     let topic = topic_by_slug_resp_data["topicBySlug"].clone();
     data.insert(
@@ -374,8 +322,8 @@ pub async fn projects_by_topic(
         }),
     );
 
-    let projects_by_topic_build_query =
-        ProjectsByTopicData::build_query(
+    let projects_by_topic_query_json =
+        json!(ProjectsByTopicData::build_query(
             projects_by_topic_data::Variables {
                 topic_slug: topic_slug,
                 from_page: page.from,
@@ -383,20 +331,11 @@ pub async fn projects_by_topic(
                 last_oid: page.last,
                 status: 1,
             },
-        );
-    let projects_by_topic_query_json =
-        json!(projects_by_topic_build_query);
-
-    let projects_by_topic_resp_head = gql_post()
-        .await
-        .json(&projects_by_topic_query_json)
-        .send()
-        .await
-        .unwrap();
-    let projects_by_topic_resp_body: GqlResponse<Value> =
-        projects_by_topic_resp_head.json().await.unwrap();
+        ));
     let projects_by_topic_resp_data =
-        projects_by_topic_resp_body.data.expect("无响应数据");
+        gql_resp(&projects_by_topic_query_json, true)
+            .await
+            .expect("无响应数据");
 
     let projects_by_topic =
         projects_by_topic_resp_data["projectsByTopicSlug"].clone();
@@ -449,27 +388,17 @@ pub async fn projects_filter(
                 json!("is-selected"),
             );
 
-            let projects_recommended_build_query =
+            let projects_recommended_query_json = json!(
                 ProjectsData::build_query(projects_data::Variables {
                     from_page: page.from,
                     first_oid: page.first,
                     last_oid: page.last,
                     status: 2,
-                });
-            let projects_recommended_query_json =
-                json!(projects_recommended_build_query);
-
-            let projects_recommended_resp_head = gql_post()
-                .await
-                .json(&projects_recommended_query_json)
-                .send()
-                .await
-                .unwrap();
-            let projects_recommended_resp_body: GqlResponse<Value> =
-                projects_recommended_resp_head.json().await.unwrap();
+                })
+            );
             let projects_recommended_resp_data =
-                projects_recommended_resp_body
-                    .data
+                gql_resp(&projects_recommended_query_json, true)
+                    .await
                     .expect("无响应数据");
 
             let projects_recommended =
@@ -561,30 +490,22 @@ pub async fn project_new_submit(
         insert_user_by_username(sign_status.username, &mut data)
             .await;
 
-        let project_new_build_query = ProjectNewData::build_query(
-            project_new_data::Variables {
-                user_id: project_info.user_id.clone(),
-                category_id: project_info.category_id,
-                subject: project_info.subject.clone(),
-                content: project_info.content,
-                contact_user: project_info.contact_user,
-                contact_phone: project_info.contact_phone,
-                contact_email: project_info.contact_email,
-                contact_im: project_info.contact_im,
-                language: project_info.language,
-            },
-        );
-        let project_new_query_json = json!(project_new_build_query);
-
-        let project_new_resp_head = gql_post()
-            .await
-            .json(&project_new_query_json)
-            .send()
-            .await
-            .unwrap();
-        let project_new_resp_body: GqlResponse<Value> =
-            project_new_resp_head.json().await.unwrap();
-        let project_new_resp_data = project_new_resp_body.data;
+        let project_new_query_json =
+            json!(ProjectNewData::build_query(
+                project_new_data::Variables {
+                    user_id: project_info.user_id.clone(),
+                    category_id: project_info.category_id,
+                    subject: project_info.subject.clone(),
+                    content: project_info.content,
+                    contact_user: project_info.contact_user,
+                    contact_phone: project_info.contact_phone,
+                    contact_email: project_info.contact_email,
+                    contact_im: project_info.contact_im,
+                    language: project_info.language,
+                },
+            ));
+        let project_new_resp_data =
+            gql_resp(&project_new_query_json, true).await;
 
         if let Some(project_new_val) = project_new_resp_data {
             let project_new_result =
@@ -593,22 +514,14 @@ pub async fn project_new_submit(
                 project_new_result["id"].as_str().unwrap();
 
             // create topics
-            let topics_build_query = TopicsNewData::build_query(
-                topics_new_data::Variables {
-                    topic_names: project_info.topic_names,
-                },
-            );
-            let topics_query_json = json!(topics_build_query);
-
-            let topics_resp_head = gql_post()
-                .await
-                .json(&topics_query_json)
-                .send()
-                .await
-                .unwrap();
-            let topics_resp_body: GqlResponse<Value> =
-                topics_resp_head.json().await.unwrap();
-            let topics_resp_data = topics_resp_body.data;
+            let topics_query_json =
+                json!(TopicsNewData::build_query(
+                    topics_new_data::Variables {
+                        topic_names: project_info.topic_names,
+                    },
+                ));
+            let topics_resp_data =
+                gql_resp(&topics_query_json, true).await;
 
             // create TopicProject
             if let Some(topics_info) = topics_resp_data {
@@ -616,22 +529,19 @@ pub async fn project_new_submit(
                     topics_info["topicsNew"].as_array().unwrap();
                 for topic_id in topic_ids {
                     let topic_id = topic_id["id"].as_str().unwrap();
-                    let topic_project_new_build_query =
-                        TopicProjectNewData::build_query(
+                    let topic_project_new_query_json =
+                        json!(TopicProjectNewData::build_query(
                             topic_project_new_data::Variables {
                                 user_id: project_info.user_id.clone(),
                                 project_id: project_id.to_string(),
                                 topic_id: topic_id.to_string(),
                             },
-                        );
-                    let topic_project_new_query_json =
-                        json!(topic_project_new_build_query);
-                    let _topic_project_new_resp_head = gql_post()
-                        .await
-                        .json(&topic_project_new_query_json)
-                        .send()
-                        .await
-                        .unwrap();
+                        ));
+                    let _topic_project_new_resp_head = gql_resp(
+                        &topic_project_new_query_json,
+                        false,
+                    )
+                    .await;
                 }
             }
 
@@ -641,33 +551,28 @@ pub async fn project_new_submit(
                 project_info.source_file_id,
             ];
             for file_id in file_ids {
-                let project_file_new_build_query =
-                    ProjectFileNewData::build_query(
+                let project_file_new_query_json =
+                    json!(ProjectFileNewData::build_query(
                         project_file_new_data::Variables {
                             user_id: project_info.user_id.clone(),
                             project_id: project_id.to_string(),
                             file_id: file_id.to_string(),
                         },
-                    );
-                let project_file_new_query_json =
-                    json!(project_file_new_build_query);
-                let _project_file_new_resp_head = gql_post()
-                    .await
-                    .json(&project_file_new_query_json)
-                    .send()
-                    .await
-                    .unwrap();
+                    ));
+                let _project_file_new_resp_head =
+                    gql_resp(&project_file_new_query_json, false)
+                        .await;
             }
 
             data.insert("project_new_result", project_new_result);
         } else {
             data.insert(
-                        "project_new_failed",
-                        json!({
-                            "subject": project_info.subject,
-                            "create_at": project_new_resp_body.errors.unwrap()[0].message
-                        }),
-                    );
+                "project_new_failed",
+                json!({
+                    "subject": project_info.subject,
+                    "create_at": "project_new_failed"
+                }),
+            );
         }
 
         project_new_tpl.render(&data).await.into_response()
@@ -713,39 +618,24 @@ pub async fn project_index(
             .await;
     }
 
-    let project_update_hits_build_query =
-        ProjectUpdateOneFieldByIdData::build_query(
+    let project_update_hits_query_json =
+        json!(ProjectUpdateOneFieldByIdData::build_query(
             project_update_one_field_by_id_data::Variables {
                 project_id: project_id.clone(),
                 field_name: String::from("hits"),
                 field_val: String::from("3"),
             },
-        );
-    let project_update_hits_query_json =
-        json!(project_update_hits_build_query);
-    let _project_update_hits_resp_head = gql_post()
-        .await
-        .json(&project_update_hits_query_json)
-        .send()
-        .await
-        .unwrap();
+        ));
+    let _project_update_hits_resp_head =
+        gql_resp(&project_update_hits_query_json, false).await;
 
-    let project_build_query =
-        ProjectData::build_query(project_data::Variables {
+    let project_query_json =
+        json!(ProjectData::build_query(project_data::Variables {
             project_id: project_id,
-        });
-    let project_query_json = json!(project_build_query);
-
-    let project_resp_head = gql_post()
+        }));
+    let project_resp_data = gql_resp(&project_query_json, true)
         .await
-        .json(&project_query_json)
-        .send()
-        .await
-        .unwrap();
-    let project_resp_body: GqlResponse<Value> =
-        project_resp_head.json().await.unwrap();
-    let project_resp_data =
-        project_resp_body.data.expect("无响应数据");
+        .expect("无响应数据");
 
     let project = project_resp_data["projectById"].clone();
     data.insert("project", project);
@@ -756,21 +646,14 @@ pub async fn project_index(
 pub async fn project_random(
     Path(language): Path<String>,
 ) -> impl IntoResponse {
-    let project_random_build_query = ProjectRandomData::build_query(
-        project_random_data::Variables {},
-    );
-    let project_random_query_json = json!(project_random_build_query);
-
-    let project_random_resp_head = gql_post()
-        .await
-        .json(&project_random_query_json)
-        .send()
-        .await
-        .unwrap();
-    let project_random_resp_body: GqlResponse<Value> =
-        project_random_resp_head.json().await.unwrap();
+    let project_random_query_json =
+        json!(ProjectRandomData::build_query(
+            project_random_data::Variables {},
+        ));
     let project_random_resp_data =
-        project_random_resp_body.data.expect("无响应数据");
+        gql_resp(&project_random_query_json, true)
+            .await
+            .expect("无响应数据");
 
     let project_random_id =
         project_random_resp_data["projectRandomId"]
@@ -820,24 +703,16 @@ pub async fn file_new(
     )
     .await;
     if upload_file.is_ok() {
-        let file_new_build_query =
-            FileNewData::build_query(file_new_data::Variables {
+        let file_new_query_json = json!(FileNewData::build_query(
+            file_new_data::Variables {
                 name: file_name.to_string(),
                 kind: file_kind,
                 location: file_location,
-            });
-        let file_new_query_json = json!(file_new_build_query);
-
-        let file_new_resp_head = gql_post()
+            }
+        ));
+        let file_new_resp_data = gql_resp(&file_new_query_json, true)
             .await
-            .json(&file_new_query_json)
-            .send()
-            .await
-            .unwrap();
-        let file_new_resp_body: GqlResponse<Value> =
-            file_new_resp_head.json().await.unwrap();
-        let file_new_resp_data =
-            file_new_resp_body.data.expect("无响应数据");
+            .expect("无响应数据");
 
         let file_new_result = file_new_resp_data["fileNew"].clone();
         let file_id = file_new_result["id"].as_str().unwrap();

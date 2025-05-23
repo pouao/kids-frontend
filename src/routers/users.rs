@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use graphql_client::{GraphQLQuery, Response as GqlResponse};
+use graphql_client::GraphQLQuery;
 use serde_json::{json, Value};
 use axum::{
     http::Method,
@@ -9,7 +9,7 @@ use axum::{
 use axum_extra::extract::cookie::CookieJar;
 
 use crate::util::{
-    common::gql_post,
+    common::gql_resp,
     common::sign_status,
     email::send_email,
     tpl::Hbs,
@@ -63,24 +63,15 @@ pub async fn users_index(
             .await;
     }
 
-    let users_build_query =
-        UsersData::build_query(users_data::Variables {
+    let users_query_json =
+        json!(UsersData::build_query(users_data::Variables {
             from_page: page.from,
             first_oid: page.first,
             last_oid: page.last,
             status: 1,
-        });
-    let users_query_json = json!(users_build_query);
-
-    let users_resp_head = gql_post()
-        .await
-        .json(&users_query_json)
-        .send()
-        .await
-        .unwrap();
-    let users_resp_body: GqlResponse<Value> =
-        users_resp_head.json().await.unwrap();
-    let users_resp_data = users_resp_body.data.expect("无响应数据");
+        }));
+    let users_resp_data =
+        gql_resp(&users_query_json, true).await.expect("无响应数据");
 
     let users = users_resp_data["users"].clone();
     data.insert("pagination", users);
@@ -123,26 +114,15 @@ pub async fn user_index(
             .await;
     }
 
-    let author_by_username_detail_build_query =
-        UserByUsernameDetailData::build_query(
+    let author_by_username_detail_query_json =
+        json!(UserByUsernameDetailData::build_query(
             user_by_username_detail_data::Variables {
                 username: author_username,
             },
-        );
-    let author_by_username_detail_query_json =
-        json!(author_by_username_detail_build_query);
-
-    let author_by_username_detail_resp_head = gql_post()
-        .await
-        .json(&author_by_username_detail_query_json)
-        .send()
-        .await
-        .unwrap();
-    let author_by_username_detail_resp_body: GqlResponse<Value> =
-        author_by_username_detail_resp_head.json().await.unwrap();
+        ));
     let author_by_username_detail_resp_data =
-        author_by_username_detail_resp_body
-            .data
+        gql_resp(&author_by_username_detail_query_json, true)
+            .await
             .expect("无响应数据");
 
     let author_user_detail =
@@ -180,24 +160,16 @@ pub async fn user_activate(
 
     match method {
         Method::POST => {
-            let user_resend_build_query = UserByIdData::build_query(
-                user_by_id_data::Variables {
-                    id: user_id.clone(),
-                },
-            );
             let user_resend_query_json =
-                json!(user_resend_build_query);
-
-            let user_resend_resp_head = gql_post()
-                .await
-                .json(&user_resend_query_json)
-                .send()
-                .await
-                .unwrap();
-            let user_resend_resp_body: GqlResponse<Value> =
-                user_resend_resp_head.json().await.unwrap();
+                json!(UserByIdData::build_query(
+                    user_by_id_data::Variables {
+                        id: user_id.clone(),
+                    },
+                ));
             let user_resend_resp_data =
-                user_resend_resp_body.data.expect("无响应数据");
+                gql_resp(&user_resend_query_json, true)
+                    .await
+                    .expect("无响应数据");
 
             let user_resend =
                 user_resend_resp_data["userById"].clone();
@@ -214,27 +186,18 @@ pub async fn user_activate(
             data.insert("user_resend", user_resend);
         }
         _ => {
-            let user_activate_build_query =
-                UserUpdateOneFieldByIdData::build_query(
+            let user_activate_query_json =
+                json!(UserUpdateOneFieldByIdData::build_query(
                     user_update_one_field_by_id_data::Variables {
                         user_id: user_id.to_string(),
                         field_name: String::from("status"),
                         field_val: String::from("1"),
                     },
-                );
-            let user_activate_query_json =
-                json!(user_activate_build_query);
-
-            let user_activate_resp_head = gql_post()
-                .await
-                .json(&user_activate_query_json)
-                .send()
-                .await
-                .unwrap();
-            let user_activate_resp_body: GqlResponse<Value> =
-                user_activate_resp_head.json().await.unwrap();
+                ));
             let user_activate_resp_data =
-                user_activate_resp_body.data.expect("无响应数据");
+                gql_resp(&user_activate_query_json, true)
+                    .await
+                    .expect("无响应数据");
 
             let user_activate =
                 user_activate_resp_data["userUpdateOneFieldById"]

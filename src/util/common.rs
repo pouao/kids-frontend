@@ -4,13 +4,30 @@ use fluent_bundle::{
 };
 use serde_json::{Map, Value};
 use axum_extra::extract::cookie::CookieJar;
-use reqwest::{Client, RequestBuilder};
+use reqwest::Client;
+use graphql_client::Response as GqlResponse;
 
 use crate::util::constant::CFG;
 use crate::models::users::SignStatus;
 
-pub async fn gql_post() -> RequestBuilder {
-    Client::new().post(CFG.get("GQL_URL").unwrap())
+pub async fn gql_resp(
+    gql_query_json: &Value,
+    return_data: bool,
+) -> Option<Value> {
+    let gql_resp_head = Client::new()
+        .post(CFG.get("GQL_URL").unwrap())
+        .json(gql_query_json)
+        .send()
+        .await
+        .unwrap();
+    match return_data {
+        true => {
+            let gql_resp_body: GqlResponse<Value> =
+                gql_resp_head.json().await.unwrap();
+            gql_resp_body.data
+        }
+        false => None,
+    }
 }
 
 pub fn get_lang_msg(
