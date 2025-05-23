@@ -1,9 +1,8 @@
 use std::collections::BTreeMap;
 use graphql_client::{GraphQLQuery, Response as GqlResponse};
 use serde_json::{json, Value};
-use reqwest::Client;
 
-use super::constant::CFG;
+use super::common::gql_post;
 use crate::models::{
     users::{
         UserByUsernameData, user_by_username_data, WishRandomData,
@@ -25,8 +24,8 @@ pub async fn insert_user_by_username(
     let user_by_username_query_json =
         json!(user_by_username_build_query);
 
-    let user_by_username_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let user_by_username_resp_head = gql_post()
+        .await
         .json(&user_by_username_query_json)
         .send()
         .await
@@ -47,8 +46,8 @@ pub async fn insert_wish_random(data: &mut BTreeMap<&str, Value>) {
         });
     let wish_random_query_json = json!(wish_random_build_query);
 
-    let wish_random_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let wish_random_resp_head = gql_post()
+        .await
         .json(&wish_random_query_json)
         .send()
         .await
@@ -67,8 +66,8 @@ pub async fn insert_categories(data: &mut BTreeMap<&str, Value>) {
         CategoriesData::build_query(categories_data::Variables {});
     let categories_query_json = json!(categories_build_query);
 
-    let categories_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let categories_resp_head = gql_post()
+        .await
         .json(&categories_query_json)
         .send()
         .await

@@ -7,10 +7,9 @@ use axum::{
     extract::{Path, Query},
 };
 use axum_extra::extract::cookie::CookieJar;
-use reqwest::Client;
 
 use crate::util::{
-    constant::CFG,
+    common::gql_post,
     common::sign_status,
     email::send_email,
     tpl::Hbs,
@@ -73,8 +72,8 @@ pub async fn users_index(
         });
     let users_query_json = json!(users_build_query);
 
-    let users_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let users_resp_head = gql_post()
+        .await
         .json(&users_query_json)
         .send()
         .await
@@ -133,8 +132,8 @@ pub async fn user_index(
     let author_by_username_detail_query_json =
         json!(author_by_username_detail_build_query);
 
-    let author_by_username_detail_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let author_by_username_detail_resp_head = gql_post()
+        .await
         .json(&author_by_username_detail_query_json)
         .send()
         .await
@@ -155,8 +154,7 @@ pub async fn user_index(
 
 pub async fn user_activate(
     method: Method,
-    Path(language): Path<String>,
-    Path(user_id): Path<String>,
+    Path((language, user_id)): Path<(String, String)>,
 ) -> impl IntoResponse {
     let mut user_activate_tpl: Hbs =
         Hbs::new("users/users-user-activate").await;
@@ -190,8 +188,8 @@ pub async fn user_activate(
             let user_resend_query_json =
                 json!(user_resend_build_query);
 
-            let user_resend_resp_head = Client::new()
-                .post(CFG.get("GQL_URL").unwrap())
+            let user_resend_resp_head = gql_post()
+                .await
                 .json(&user_resend_query_json)
                 .send()
                 .await
@@ -227,8 +225,8 @@ pub async fn user_activate(
             let user_activate_query_json =
                 json!(user_activate_build_query);
 
-            let user_activate_resp_head = Client::new()
-                .post(CFG.get("GQL_URL").unwrap())
+            let user_activate_resp_head = gql_post()
+                .await
                 .json(&user_activate_query_json)
                 .send()
                 .await

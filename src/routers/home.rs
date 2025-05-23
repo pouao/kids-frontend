@@ -7,11 +7,10 @@ use axum::{
     extract::{Path, Form},
 };
 use axum_extra::extract::cookie::{Cookie, CookieJar};
-use reqwest::Client;
 
 use crate::util::{
-    constant::CFG, tpl::Hbs, tpl_data::insert_wish_random,
-    email::send_email,
+    constant::CFG, common::gql_post, tpl::Hbs,
+    tpl_data::insert_wish_random, email::send_email,
 };
 use crate::models::{
     home::{
@@ -74,8 +73,8 @@ async fn init_index<'ii>(
         });
     let home_query_json = json!(home_build_query);
 
-    let home_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let home_resp_head = gql_post()
+        .await
         .json(&home_query_json)
         .send()
         .await
@@ -165,8 +164,8 @@ pub async fn register_submit(
         });
     let register_query_json = json!(register_build_query);
 
-    let register_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let register_resp_head = gql_post()
+        .await
         .json(&register_query_json)
         .send()
         .await
@@ -186,8 +185,8 @@ pub async fn register_submit(
             });
         let topics_query_json = json!(topics_build_query);
 
-        let topics_resp_head = Client::new()
-            .post(CFG.get("GQL_URL").unwrap())
+        let topics_resp_head = gql_post()
+            .await
             .json(&topics_query_json)
             .send()
             .await
@@ -210,8 +209,8 @@ pub async fn register_submit(
                     );
                 let topic_user_query_json =
                     json!(topic_user_build_query);
-                let _topic_user_resp_head = Client::new()
-                    .post(CFG.get("GQL_URL").unwrap())
+                let _topic_user_resp_head = gql_post()
+                    .await
                     .json(&topic_user_query_json)
                     .send()
                     .await
@@ -299,8 +298,8 @@ pub async fn sign_in_submit(
         });
     let sign_in_query_json = json!(sign_in_build_query);
 
-    let sign_in_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let sign_in_resp_head = gql_post()
+        .await
         .json(&sign_in_query_json)
         .send()
         .await

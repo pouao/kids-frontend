@@ -10,11 +10,10 @@ use axum::{
 };
 use axum_extra::extract::cookie::CookieJar;
 use serde_json::{json, Value};
-use reqwest::Client;
 use percent_encoding::percent_decode;
 
 use crate::util::{
-    constant::CFG,
+    common::gql_post,
     common::sign_status,
     tpl::Hbs,
     tpl_data::{
@@ -91,8 +90,8 @@ pub async fn projects_index(
         });
     let projects_query_json = json!(projects_build_query);
 
-    let projects_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let projects_resp_head = gql_post()
+        .await
         .json(&projects_query_json)
         .send()
         .await
@@ -153,8 +152,8 @@ pub async fn projects_by_user(
     let author_by_username_query_json =
         json!(author_by_username_build_query);
 
-    let author_by_username_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let author_by_username_resp_head = gql_post()
+        .await
         .json(&author_by_username_query_json)
         .send()
         .await
@@ -192,8 +191,8 @@ pub async fn projects_by_user(
     let projects_by_user_query_json =
         json!(projects_by_user_build_query);
 
-    let projects_by_user_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let projects_by_user_resp_head = gql_post()
+        .await
         .json(&projects_by_user_query_json)
         .send()
         .await
@@ -256,8 +255,8 @@ pub async fn projects_by_category(
     let category_by_slug_query_json =
         json!(category_by_slug_build_query);
 
-    let category_by_slug_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let category_by_slug_resp_head = gql_post()
+        .await
         .json(&category_by_slug_query_json)
         .send()
         .await
@@ -293,8 +292,8 @@ pub async fn projects_by_category(
     let projects_by_category_query_json =
         json!(projects_by_category_build_query);
 
-    let projects_by_category_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let projects_by_category_resp_head = gql_post()
+        .await
         .json(&projects_by_category_query_json)
         .send()
         .await
@@ -355,8 +354,8 @@ pub async fn projects_by_topic(
         });
     let topic_by_slug_query_json = json!(topic_by_slug_build_query);
 
-    let topic_by_slug_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let topic_by_slug_resp_head = gql_post()
+        .await
         .json(&topic_by_slug_query_json)
         .send()
         .await
@@ -388,8 +387,8 @@ pub async fn projects_by_topic(
     let projects_by_topic_query_json =
         json!(projects_by_topic_build_query);
 
-    let projects_by_topic_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let projects_by_topic_resp_head = gql_post()
+        .await
         .json(&projects_by_topic_query_json)
         .send()
         .await
@@ -460,8 +459,8 @@ pub async fn projects_filter(
             let projects_recommended_query_json =
                 json!(projects_recommended_build_query);
 
-            let projects_recommended_resp_head = Client::new()
-                .post(CFG.get("GQL_URL").unwrap())
+            let projects_recommended_resp_head = gql_post()
+                .await
                 .json(&projects_recommended_query_json)
                 .send()
                 .await
@@ -577,8 +576,8 @@ pub async fn project_new_submit(
         );
         let project_new_query_json = json!(project_new_build_query);
 
-        let project_new_resp_head = Client::new()
-            .post(CFG.get("GQL_URL").unwrap())
+        let project_new_resp_head = gql_post()
+            .await
             .json(&project_new_query_json)
             .send()
             .await
@@ -601,8 +600,8 @@ pub async fn project_new_submit(
             );
             let topics_query_json = json!(topics_build_query);
 
-            let topics_resp_head = Client::new()
-                .post(CFG.get("GQL_URL").unwrap())
+            let topics_resp_head = gql_post()
+                .await
                 .json(&topics_query_json)
                 .send()
                 .await
@@ -627,8 +626,8 @@ pub async fn project_new_submit(
                         );
                     let topic_project_new_query_json =
                         json!(topic_project_new_build_query);
-                    let _topic_project_new_resp_head = Client::new()
-                        .post(CFG.get("GQL_URL").unwrap())
+                    let _topic_project_new_resp_head = gql_post()
+                        .await
                         .json(&topic_project_new_query_json)
                         .send()
                         .await
@@ -652,8 +651,8 @@ pub async fn project_new_submit(
                     );
                 let project_file_new_query_json =
                     json!(project_file_new_build_query);
-                let _project_file_new_resp_head = Client::new()
-                    .post(CFG.get("GQL_URL").unwrap())
+                let _project_file_new_resp_head = gql_post()
+                    .await
                     .json(&project_file_new_query_json)
                     .send()
                     .await
@@ -724,8 +723,8 @@ pub async fn project_index(
         );
     let project_update_hits_query_json =
         json!(project_update_hits_build_query);
-    let _project_update_hits_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let _project_update_hits_resp_head = gql_post()
+        .await
         .json(&project_update_hits_query_json)
         .send()
         .await
@@ -737,8 +736,8 @@ pub async fn project_index(
         });
     let project_query_json = json!(project_build_query);
 
-    let project_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let project_resp_head = gql_post()
+        .await
         .json(&project_query_json)
         .send()
         .await
@@ -762,8 +761,8 @@ pub async fn project_random(
     );
     let project_random_query_json = json!(project_random_build_query);
 
-    let project_random_resp_head = Client::new()
-        .post(CFG.get("GQL_URL").unwrap())
+    let project_random_resp_head = gql_post()
+        .await
         .json(&project_random_query_json)
         .send()
         .await
@@ -829,8 +828,8 @@ pub async fn file_new(
             });
         let file_new_query_json = json!(file_new_build_query);
 
-        let file_new_resp_head = Client::new()
-            .post(CFG.get("GQL_URL").unwrap())
+        let file_new_resp_head = gql_post()
+            .await
             .json(&file_new_query_json)
             .send()
             .await

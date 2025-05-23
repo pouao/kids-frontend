@@ -4,8 +4,14 @@ use fluent_bundle::{
 };
 use serde_json::{Map, Value};
 use axum_extra::extract::cookie::CookieJar;
+use reqwest::{Client, RequestBuilder};
 
+use crate::util::constant::CFG;
 use crate::models::users::SignStatus;
+
+pub async fn gql_post() -> RequestBuilder {
+    Client::new().post(CFG.get("GQL_URL").unwrap())
+}
 
 pub fn get_lang_msg(
     lang_id: &str,
