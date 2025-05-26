@@ -144,7 +144,7 @@ pub async fn project_admin(
         insert_user_by_username(sign_status.username, &mut data)
             .await;
 
-        let project_update_hits_query_json =
+        let project_update_hits_field_by_id_query_json =
             json!(ProjectUpdateOneFieldByIdData::build_query(
                 project_update_one_field_by_id_data::Variables {
                     project_id: project_id.clone(),
@@ -152,8 +152,11 @@ pub async fn project_admin(
                     field_val: String::from("3"),
                 },
             ));
-        let _project_update_hits_resp_head =
-            gql_resp(&project_update_hits_query_json, false).await;
+        let _project_update_hits_field_by_id_resp_head = gql_resp(
+            &project_update_hits_field_by_id_query_json,
+            false,
+        )
+        .await;
 
         let project_query_json = json!(ProjectData::build_query(
             project_data::Variables {
@@ -186,7 +189,7 @@ pub async fn project_update_one_field(
 ) -> impl IntoResponse {
     let sign_status = sign_status(cookie_jar).await;
     if sign_status.sign_in {
-        let project_update_hits_query_json =
+        let project_update_one_field_by_id_query_json =
             json!(ProjectUpdateOneFieldByIdData::build_query(
                 project_update_one_field_by_id_data::Variables {
                     project_id: project_id.clone(),
@@ -194,8 +197,11 @@ pub async fn project_update_one_field(
                     field_val: field_val,
                 },
             ));
-        let _project_update_hits_resp_head =
-            gql_resp(&project_update_hits_query_json, false).await;
+        let _project_update_one_field_by_id_resp_head = gql_resp(
+            &project_update_one_field_by_id_query_json,
+            false,
+        )
+        .await;
 
         let admin_project_redirect = Redirect::to(
             format!("/{}/admin/project-{}", language, project_id)
