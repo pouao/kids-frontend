@@ -15,9 +15,9 @@ pub async fn send_email(
 ) {
     let domain = CFG.get("DOMAIN").unwrap();
     let email_smtp = CFG.get("EMAIL_SMTP").unwrap();
-    let email_from = dotenvy::var("EMAIL_FROM").unwrap();
-    let email_username = dotenvy::var("EMAIL_USERNAME").unwrap();
-    let email_password = dotenvy::var("EMAIL_PASSWORD").unwrap();
+    let email_from = CFG.get("EMAIL_FROM").unwrap();
+    let email_username = CFG.get("EMAIL_USERNAME").unwrap();
+    let email_password = CFG.get("EMAIL_PASSWORD").unwrap();
 
     let mut email_args = Map::new();
     email_args.insert("nickname".to_string(), json!(nickname));
@@ -52,7 +52,10 @@ pub async fn send_email(
         .body(email_body)
         .unwrap();
 
-    let creds = Credentials::new(email_username, email_password);
+    let creds = Credentials::new(
+        email_username.to_string(),
+        email_password.to_string(),
+    );
     let mailer = SmtpTransport::relay(email_smtp)
         .unwrap()
         .credentials(creds)
