@@ -1,7 +1,6 @@
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use kids_frontend::util::constant::CFG;
-use kids_frontend::routers::push_router;
+use kids_frontend::{util::constant::CFG, routers::push_router};
 
 #[tokio::main]
 async fn main() {

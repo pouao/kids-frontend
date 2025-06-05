@@ -1,8 +1,8 @@
 use lazy_static::lazy_static;
 use std::collections::HashMap;
 
-pub const TPLS_DIR: &str = "templates";
 pub const SCRIPTS_DIR: &str = "assets/scripts";
+pub const TPLS_DIR: &str = "templates";
 pub const FILES_DIR: &str = "files";
 
 lazy_static! {
