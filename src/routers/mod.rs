@@ -21,7 +21,10 @@ pub async fn push_router() -> Router {
         .nest_service("/static", ServeDir::new("static"))
         .nest_service("/files", ServeDir::new("files"))
         .route("/", get(super::routers::home::init))
-        .route_service("/ads.txt", ServeFile::new("static/ads.txt"));
+        .route_service(
+            "/ads.txt",
+            ServeFile::new("templates/ads.txt"),
+        );
 
     let home_router = Router::new()
         .route("/", get(super::routers::home::index))
